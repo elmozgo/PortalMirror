@@ -1,0 +1,54 @@
+/* USE SCSS NOT CSS PLEASE. LIFERAY PARSES THIS FILE */
+.clock-portlet {
+    
+	letter-spacing: -2px;
+	color: #fff;
+	height: 100%;
+	
+	.small{
+		
+		letter-spacing: 0px;
+		font-family: "HelveticaNeue-Medium";
+	}
+	
+	.top-bar {
+		white-space: nowrap;
+	    height: 15%;
+	}
+	 
+	.time {
+	    height: 85%;
+	    padding-left: 5%;
+	    margin-top: -20px;
+	}
+	
+	.seconds {
+	    font-size: 0.3em;
+	    vertical-align: text-top;
+	}
+	
+	.hours-minutes {
+	    font-size: 1em;
+	}
+	
+	.bottom-bar {
+	    display:none;
+	}
+	
+  &.small-portlet-mode {
+	    
+	    .top-bar {
+	        display: none;
+	    }
+	    
+	    .bottom-bar {
+	        display: block;
+	        height: 20%;
+	    }
+	    .seconds {
+	        display: none;
+	    } 
+	    
+	}
+	    
+}
