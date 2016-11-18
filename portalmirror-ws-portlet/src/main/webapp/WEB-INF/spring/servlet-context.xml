@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.2.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-2.5.xsd http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd">
+	<context:annotation-config />
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/jwt/ajax/**" />
+			<bean class="org.portalmirror.jwt.rest.v1.AjaxCsrfInterceptor" name="ajaxCsrfInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<mvc:annotation-driven validator="validator"  />
+	
+
+
+	<bean id="jwtAjaxController" class="org.portalmirror.jwt.rest.v1.JwtAjaxController" />
+	<bean id="languageUtil" class="com.liferay.portal.kernel.language.LanguageUtil" />
+	<bean id="htmlUtil" class="com.liferay.portal.kernel.util.HtmlUtil" />
+	<bean id="freemarkerValueUtil"
+		class="org.portalmirror.jwt.common.web.freemarker.utils.FreemarkerValueUtil" />
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.InternalResourceView" />
+		<property name="prefix" value="/jsp/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="2" />
+	</bean>
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/views/" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="auto_import">spring.ftl as spring</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="ftlViewResolver"
+		class="org.portalmirror.jwt.common.web.freemarker.ExtendedFreemarkerViewResolver">
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="cache" value="true" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="order" value="1" />
+		<property name="fmConfigurer" ref="freemarkerConfig" />
+	</bean>
+
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+</beans>
