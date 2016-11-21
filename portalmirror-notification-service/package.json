@@ -1,0 +1,27 @@
+{
+  "name": "portalmirror-notification-service",
+  "version": "0.0.1",
+  "description": "portalmirror-notification-service",
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "dependencies": {
+    "chai": "~3.5.0",
+    "express": "~4.14.0",
+    "jsonwebtoken": "^7.1.9",
+    "socket.io": "^1.5.1",
+    "socketio-jwt": "^4.5.0",
+    "socketio-jwt-auth": "0.0.5",
+    "websocket": "~1.0.23"
+  },
+  "devDependencies": {
+    "mocha": "~3.1.2"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Artur Karwowski <artur.karwowski@mailplus.pl>",
+  "license": "GPL"
+}

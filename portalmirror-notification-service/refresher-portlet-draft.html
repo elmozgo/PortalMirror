@@ -1,0 +1,28 @@
+<script>
+
+    window.refresherPortletSettings = window.refresherPortletSettings || {
+        nodeWsUrl = "ws://localhost:3000";
+    }
+    
+    
+</script>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    <script>
+  // You should add auth_token to query while connecting 
+  // Replace THE_JWT_TOKEN with the valid one 
+  var socket = io('http://localhost:3000', {query: 'auth_token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0Nzk3NzIzNTksInN1YiI6ImZha2VQb3J0bGV0IiwiaXNzIjoiXC9kZWxlZ2F0ZVwvand0XC9hamF4XC93cy10b2tlbiIsImlhdCI6MTQ3OTc2ODc1OX0.e3r3uqdzQR5Fsz_6uWmj2AZD43CWHb6m_e-YnaSpG5Q'});
+  // Authentication failed 
+  socket.on('error', function(err) {
+    throw new Error(err);
+  });
+  // Authentication passed 
+  socket.on('success', function(data) {
+    console.log(message);
+    console.log('user info: ' + user);
+  })
+</script>
+
+</script>
