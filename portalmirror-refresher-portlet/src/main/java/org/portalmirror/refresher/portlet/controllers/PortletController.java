@@ -1,70 +1,85 @@
 package org.portalmirror.refresher.portlet.controllers;
 
-import javax.portlet.PortletConfig;
-import javax.portlet.RenderRequest;
+import java.io.IOException;
 
-import org.portalmirror.refresher.common.portlet.CustomPropsUtil;
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletRequest;
+import javax.portlet.RenderRequest;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
+
 import org.portalmirror.refresher.common.web.freemarker.keys.FreemarkerKeys;
 import org.portalmirror.refresher.common.web.freemarker.utils.FreemarkerValueUtil;
+import org.portalmirror.refresher.logic.AuthorizationLogic;
+import org.portalmirror.refresher.logic.RefresherNotificationService;
 import org.portalmirror.refresher.portlet.keys.PortletActionKeys;
+import org.portalmirror.refresher.portlet.keys.ResourceKeys;
 import org.portalmirror.refresher.portlet.keys.ViewKeys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import org.springframework.web.portlet.context.PortletConfigAware;
 
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-
-// TODO: Make readme for github */
-// TODO: Publish on github publically as well, remember readme, and my name as copyright and publish in my blog as well
-// and remember to mention that you can use both jsp and freemarker*/
-
-/**
- * main controller class for the order portlet spring mvc application
- */
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.theme.ThemeDisplay;
 
 @Controller
 @RequestMapping(PortletActionKeys.VIEW)
-/* Use this for automatically retaining model attributes on the users session */
 public class PortletController implements PortletConfigAware {
-    private static final String NODE_WS_URL = "node.ws.url";
-
-	private static final Log LOG = LogFactoryUtil.getLog(PortletController.class);
+    private static final Log LOG = LogFactoryUtil.getLog(PortletController.class);
 
     private PortletConfig portletConfig;
 
     @Autowired
     FreemarkerValueUtil freemarkerValueUtil;
 
-    /**
-     * General render mapping. Includes correct log ussage, and portlet.properties that can be overridden in
-     * portal-ext.properties example
-     *
-     * @param request Render request
-     * @param model Spring MVC model object
-     * @return view to render
-     */
+    @Autowired
+    RefresherNotificationService refresherNotificationService;
+    
     @RenderMapping
     public String handleRenderRequest(RenderRequest request, Model model) throws SystemException {
         if (!model.containsAttribute(FreemarkerKeys.LANGUAGEUTIL))
             freemarkerValueUtil.addLiferayUtils(request, model);
-        /* Always use the Liferay log system. This doubles as an example of using the CustomPropsUtil to have
-        portal.properties props that can be overridden in portal-ext.properties. Note that you will get an exception
-        if you try to retrieve a property that doesn't exist. If you are unsure if a propertie exists, for example
-        if you don't plan on putting a default property in the portal.properties file, use the second method that
-        takes a default value.
-         */
+       
+        String portletId = (String) request.getAttribute(WebKeys.PORTLET_ID);
         
-        String nodeWsUrl = CustomPropsUtil.getProp(NODE_WS_URL);
-        model.addAttribute(nodeWsUrl);
+        ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute (WebKeys.THEME_DISPLAY);
+        String instanceId = themeDisplay.getPortletDisplay().getInstanceId();
+        Layout layout = themeDisplay.getLayout(); 
+        Long plid = layout.getPlid() ;
+        
+        model.addAttribute("portletId", portletId + "_INSTANCE_" + instanceId);
+        model.addAttribute("plid", Long.toString(plid));
+        model.addAttribute("refresherActionAuthorized", AuthorizationLogic.isRefreshActionAuthorized());
         
         return ViewKeys.MAIN;
     }
+    
+    
+    @ResourceMapping(value = ResourceKeys.REFRESH_AJAX_RESOURCE)
+    public void refreshAllInstancesOfRequestSourcePageId(ResourceRequest request, ResourceResponse response) throws IOException {
+    
+    	if(AuthorizationLogic.isRefreshActionAuthorized()) {
+    		
+    		refresherNotificationService.refreshAllClientsOnPage(Long.toString(getPlid(request)));
+    		
+    	} else {
+    		throw new IllegalStateException("User not authorised to refresh");
+    	}
+    }
 
+    private Long getPlid(PortletRequest request) {
+        
+    	ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute (WebKeys.THEME_DISPLAY);
+        return themeDisplay.getLayout().getPlid();	
+    }
 
     /**
      * Ensure we get access to the portlet config object

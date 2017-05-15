@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.1.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-2.5.xsd http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd">
+	<context:annotation-config />
+
+	<bean
+		class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	<bean
+		class="org.portalmirror.refresher.portlet.controllers.PortletController" />
+	<bean id="languageUtil" class="com.liferay.portal.kernel.language.LanguageUtil" />
+	<bean id="htmlUtil" class="com.liferay.portal.kernel.util.HtmlUtil" />
+	<bean id="freemarkerValueUtil"
+		class="org.portalmirror.refresher.common.web.freemarker.utils.FreemarkerValueUtil" />
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.InternalResourceView" />
+		<property name="prefix" value="/jsp/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="2" />
+	</bean>
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/views/" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="auto_import">spring.ftl as spring</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="ftlViewResolver"
+		class="org.portalmirror.refresher.common.web.freemarker.ExtendedFreemarkerViewResolver">
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="cache" value="true" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="order" value="1" />
+		<property name="fmConfigurer" ref="freemarkerConfig" />
+	</bean>
+	
+	<bean id ="refresherNotificationService" class="org.portalmirror.refresher.logic.RefresherNotificationService" />
+	
+	<bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+	
+	<bean id="notificationServiceRestTemplateFactory" class="org.portalmirror.websocket.client.NotificationServiceRestTemplateFactory"/>
+	
+	<bean id="notificationServiceRestTemplate" factory-bean="notificationServiceRestTemplateFactory" factory-method="createRestTemplate">
+        <constructor-arg type="java.lang.String" value="#{T(org.portalmirror.refresher.common.portlet.CustomPropsUtil).getProp('nodews.api.url')}" />
+    </bean>
+
+</beans>

@@ -1,7 +1,20 @@
 /*jslint node:true */
 'use strict';
+
+var argv = require('yarg').argv;
+var PropertiesReader = require('properties-reader');
+
+
+var properties;
+if (argv) {
+    properties = PropertiesReader('./' + argv.environment + '.properties');
+} else {
+    properties = PropertiesReader('./dev.properties');
+}
+var path = require('path');
 var express = require('express');
-var jwtAuth = require('socketio-jwt-auth');
+//var jwtAuth = require('socketio-jwt-auth');
+var socketioJwt = require('socketio-jwt');
 var jwt = require('jsonwebtoken');
 var app = express();
 var http = require('http').Server(app);
@@ -17,57 +30,91 @@ http.listen(APP_PORT, function () {
 });
 var ConnectedClient = function (socket) {
     this.socketId = socket.id;
-    this.jwt = socket.request.user;
+    this.clientId = socket.client.id;
+    this.jwt = socket.decoded_token;
+    this.pageId = socket.handshake.query.pageId;
 };
 
-var autheniticationHandler = function () {
-    return jwtAuth.authenticate({
-        secret: 'iM44jqyyDI7gyGPNCJdGyoFTcureF7p4gaEWAODa91PLQHXBWB0tsQwDvg8dJQL',
-        algorithm: 'HS256'
-    }, function (payload, done) {
-        if (payload.exp >= new Date()) {
-            return done(null, payload);
-        } else {
-            console.log('expired token: ' + payload);
-            return done(new Error('tokenExpiredError'), false, 'Token is expired');
-        }
-    });
-};
 
 var onConnection = function (socket, clients) {
     var client = new ConnectedClient(socket);
     console.log(client.jwt.sub + ' connected to socket.');
-    clients[client.socketId] = client;
+    clients[client.clientId] = client;
 };
-
-var onDisconnectEvent = function (socket, clients) {
-    var disconectedClient = clients[socket.id];
-    delete clients[socket.id];
-    console.log(disconectedClient.jwt.sub + ' client disconnected.');
-};
-
-
 
 var refresherClients = {};
 
-var refresher = io.of('/refresher').use(autheniticationHandler);
-refresher.on('connection', function (socket) {
-    
-    onConnection(socket, refresherClients);
-    socket.on('disconnect', onDisconnectEvent(socket, refresherClients));
+var refresher = io.of('refresher');
+
+refresher.on('connection', socketioJwt.authorize({
+    secret: properties.get('ws.secret'),
+    timeout: 12000})).on('authenticated', function(socket) {
+      
+        onConnection(socket, refresherClients);
+        socket.on('disconnect', function() {
+            var disconectedClient = refresherClients[socket.client.id];
+            delete refresherClients[socket.client.id];
+            console.log(disconectedClient.jwt.sub + ' client disconnected.');
+        });
+//         socket.emit('success', {
+//             message: 'authenticated',
+//             user: socket.request.user
+//         });
 });
 
-app.post('/internal/refresher/:socketId/refresh', function (req, res) {
+var eventConfirmationLogger = function(confirmation) {
+    console.log(confirmation);
+}
+
+app.get('/internal/refresher/sockets', function (req, res) {
     
-    var client = refresherClients[req.params.socketId];
+    var connectedSockets = [];
+    Object.keys(refresherClients).forEach(function (key, index) {
+        connectedSockets.push(refresherClients[key]);
+    });
+    
+    res.json(connectedSockets);
+});
+
+app.post('/internal/refresher/sockets/refresh', function (req, res) {
+    var pageId = req.query.pageId;
+    if(pageId) {
+        Object.keys(refresherClients).filter(function(client){
+            return refresherClients[client].pageId == pageId;
+        }).forEach(function(key) {
+            refresher.sockets[refresherClients[key].socketId].emit('refreshEvent', null, eventConfirmationLogger);
+        });
+        
+        res.sendStatus(200);
+        
+    } else {
+        res.sendStatus(400);
+    }
+
+});
+
+app.post('/internal/refresher/sockets/:clientId/refresh', function (req, res) {
+    
+    var client = refresherClients[req.params.clientId];
     if (client !== undefined) {
         
-        refresher.sockets[client.socketId].emit('refreshEvent');
-        res.status(200);
+        refresher.sockets[client.socketId].emit('refreshEvent', null, eventConfirmationLogger);
+   
+        res.sendStatus(200);
+       
     } else {
         
         console.log('socket not found: ' + req.params.socketId);
-        res.status(404);
+        res.sendStatus(404);
     }
+});
+
+app.get('/testing', function (req, res) {
+    
+    res.sendFile(path.join(__dirname + '/refresher-portlet-draft.html'));
+});
+app.get('/portletws.js', function (req, res) {
+    
+    res.sendFile(path.join(__dirname + '/portletws.js'));
 });
 

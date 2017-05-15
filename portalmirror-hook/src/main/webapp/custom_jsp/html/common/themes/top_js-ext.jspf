@@ -1,4 +1,14 @@
- <script src="/html/js/jquery.js"></script>
- <script src="/html/js/jquery-bigtext.js"></script>
- <script src="/html/js/portalmirror-common.js"></script>
- <script src="/html/js/portalmirror-refresher.js"></script>
+
+<script src="/html/js/jquery.js"></script>
+<script src="/html/js/jquery-bigtext.js"></script>
+<script src="/html/js/portalmirror-common.js"></script>
+<script src="/html/js/socket.io.js"></script>
+<script src="/html/js/portalmirror-ws.js"></script>
+<script>
+
+
+window.wsTokenSettings = window.wsTokenSettings || {
+	nodeWsUrl: '<%=PropsUtil.get("nodews.url")%>',
+	tokenLocation: '<%=PropsUtil.get("tokenLocation")%>'
+}
+</script>

@@ -16,14 +16,14 @@ http://www.springframework.org/schema/aop/spring-aop-2.5.xsd http://www.springfr
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/jwt/ajax/**" />
-			<bean class="org.portalmirror.jwt.rest.v1.AjaxCsrfInterceptor" name="ajaxCsrfInterceptor"/>
+			<bean class="org.portalmirror.jwt.controller.AjaxCsrfInterceptor" name="ajaxCsrfInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
 	<mvc:annotation-driven validator="validator"  />
 	
 
 
-	<bean id="jwtAjaxController" class="org.portalmirror.jwt.rest.v1.JwtAjaxController" />
+	<bean id="jwtAjaxController" class="org.portalmirror.jwt.controller.JwtAjaxController" />
 	<bean id="languageUtil" class="com.liferay.portal.kernel.language.LanguageUtil" />
 	<bean id="htmlUtil" class="com.liferay.portal.kernel.util.HtmlUtil" />
 	<bean id="freemarkerValueUtil"

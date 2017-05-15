@@ -3,9 +3,9 @@ package org.portalmirror.refresher.common.web.freemarker.utils;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-
 import org.portalmirror.refresher.common.web.freemarker.keys.FreemarkerKeys;
 
 import javax.portlet.PortletConfig;
