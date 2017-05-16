@@ -6,8 +6,10 @@ RefresherSocketConnection.prototype = Object.create(SocketConnection.prototype, 
     init: {
         value: function() {
                 SocketConnection.prototype.init.call(this, function() {
+                    var that = this;
+                    
                     this.socket.on('refreshEvent', function(message, callback) {
-                        callback('refreshed : portletId=' + this.portletName + ' plid=' + this.pageId);
+                        callback('refreshed : portletId=' + that.portletName + ' plid=' + that.pageId);
                         location.reload(true);
                     });
                 });
