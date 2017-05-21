@@ -142,5 +142,14 @@
             <artifactId>hibernate-validator-annotation-processor</artifactId>
             <version>5.1.2.Final</version>
         </dependency>
+        
+                		<!-- workspace -->
+		
+		<dependency>
+			<groupId>org.portalmirror</groupId>
+			<artifactId>portalmirror-websocket-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+        
 	</dependencies>
 </project>

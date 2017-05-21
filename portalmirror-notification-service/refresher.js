@@ -21,7 +21,7 @@ app.get('/internal/refresher/sockets', function (req, res) {
 
 app.post('/internal/refresher/sockets/refresh', function (req, res) {
     var pageId = req.query.pageId;
-    if(pageId) {
+    if(pageId !== undefined) {
         Object.keys(refresherClients).filter(function(client){
             return refresherClients[client].pageId == pageId;
         }).forEach(function(key) {

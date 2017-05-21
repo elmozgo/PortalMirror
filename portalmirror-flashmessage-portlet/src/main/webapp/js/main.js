@@ -1,24 +1,21 @@
 
-jQuery.fn.showFlashText = function(text, period, fadeSpeed) {
+jQuery.fn.showFlashText = jQuery.fn.showFlashText || function(text, period, fadeSpeed) {
     
     var that = $(this);
-    that.hide();
-    that.html(text);
     
-    that.bigText({
+    var span = that.find('span');
+    
+    span.html(text);
+    span.bigText({
         horizontalAlign: "center",
         verticalAlign: "center",
         fontSizeFactor: 1
     });
     
-    that.fadeIn(fadeSpeed, function() {
-            
-            setTimeout(function(){
-                that.fadeOut(fadeSpeed, function() {
-                    //done
-                });
-            }, period);
-    });
+    that.toggleClass('message-visible');
+        setTimeout(function(){
+            that.toggleClass('message-visible');
+        }, period);
     
 };
 

@@ -18,6 +18,9 @@ var express = require('express');
 
 var jwt = require('jsonwebtoken');
 var app = express();
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var http = require('http').Server(app);
 exports.http = http;
@@ -36,3 +39,4 @@ exports.app = app;
 
 require('./portalmirror-socket.js');
 require('./refresher.js');
+require('./flash-message.js');

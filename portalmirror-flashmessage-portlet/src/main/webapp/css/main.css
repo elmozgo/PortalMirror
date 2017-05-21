@@ -2,3 +2,15 @@
 #p_p_id_portalmirror-flashmessage-portlet_WAR_portalmirror-flashmessage-portlet10SNAPSHOT_ {
     h1 { color: #ff0000; }
 }
+
+
+.flash-message-container{
+	color: #000;
+	transition: 1s;
+	height:90%;
+	width:90%;
+	
+	&.message-visible{
+		color: #fff;
+	}
+}

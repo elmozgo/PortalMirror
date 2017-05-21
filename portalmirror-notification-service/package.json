@@ -8,6 +8,7 @@
     "test": "test"
   },
   "dependencies": {
+    "body-parser": "^1.17.2",
     "chai": "~3.5.0",
     "express": "~4.14.0",
     "jsonwebtoken": "^7.1.9",

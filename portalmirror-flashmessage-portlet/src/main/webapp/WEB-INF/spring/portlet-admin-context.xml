@@ -45,4 +45,16 @@ http://www.springframework.org/schema/aop/spring-aop-2.5.xsd http://www.springfr
     <property name="fmConfigurer" ref="freemarkerConfig"/>
   </bean>
   
+  
+  	<bean id ="flashMessageNotificationService" class="org.portalmirror.flashmessage.logic.FlashMessageNotificationService" />
+
+	<bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+	
+	<bean id="notificationServiceRestTemplateFactory" class="org.portalmirror.websocket.client.NotificationServiceRestTemplateFactory"/>
+	
+	<bean id="notificationServiceRestTemplate" factory-bean="notificationServiceRestTemplateFactory" factory-method="createRestTemplate">
+        <constructor-arg type="java.lang.String" value="#{T(org.portalmirror.flashmessage.common.portlet.CustomPropsUtil).getProp('nodews.api.url')}" />
+    </bean>
+  
+  
 </beans>
