@@ -2,7 +2,7 @@
 <script src="/html/js/jquery.js"></script>
 <script src="/html/js/jquery-bigtext.js"></script>
 <script src="/html/js/portalmirror-common.js"></script>
-<script src="/html/js/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.5.1/socket.io.min.js"></script>
 <script src="/html/js/portalmirror-ws.js"></script>
 <script>
 
