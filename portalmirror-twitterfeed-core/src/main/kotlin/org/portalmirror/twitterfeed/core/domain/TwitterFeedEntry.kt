@@ -31,7 +31,7 @@ class TwitterFeedEntry {
         this.status = status
         this.repository = repository
         this.depth = parent.depth + 1
-        if(MAX_EAGER_LOADING_FEED_DEPTH < this.depth) {
+        if(MAX_EAGER_LOADING_FEED_DEPTH > this.depth) {
             this.replies = getReplies(repository, status)
         } else {
             this.replies = emptyList()
@@ -40,7 +40,7 @@ class TwitterFeedEntry {
     }
 
 
-    private fun getReplies(repository: TwitterRepository, status: Status) = repository.getAllRepliesToStatus(this.status).map { s -> TwitterFeedEntry(status, repository, this) }
+    private fun getReplies(repository: TwitterRepository, status: Status) = repository.getAllRepliesToStatus(this.status).map { s -> TwitterFeedEntry(s, repository, this) }
 
 
     fun isEagerLoaded() : Boolean {
