@@ -9,8 +9,7 @@ class TwitterFeedEntry {
 
     val status : Status
     var replies : List<TwitterFeedEntry>
-    val repository: TwitterRepository
-
+    private val repository: TwitterRepository
     val depth : Int
     val createdAt : DateTime
 

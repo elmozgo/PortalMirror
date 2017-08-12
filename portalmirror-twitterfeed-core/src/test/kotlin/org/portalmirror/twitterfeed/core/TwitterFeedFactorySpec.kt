@@ -7,7 +7,6 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.portalmirror.twitterfeed.core.domain.TwitterFeedEntry
@@ -36,11 +35,11 @@ class TwitterFeedFactorySpec : Spek({
             on("getFeed()") {
                 val feed : List<TwitterFeedEntry> = factory.getFeed(Arrays.asList(screenName))
 
-                it("should eager load 2 levels of replies") {
+                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.find { e -> e.status.equals(rootStatus1) }!!.replies
+                val repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_Status1.flatMap { e -> e.replies }
+                val repliesTo_repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_repliesTo_Status1.flatMap { e -> e.replies }
 
-                    val repliesTo_Status1 : List<TwitterFeedEntry> = feed.find { e -> e.status.equals(rootStatus1) }!!.replies
-                    val repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_Status1.flatMap { e -> e.replies }
-                    val repliesTo_repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_repliesTo_Status1.flatMap { e -> e.replies }
+                it("should eager load 2 levels of replies") {
 
                     assertThat(repliesTo_Status1).hasSize(1)
                     assertThat(repliesTo_Status1[0].status).isEqualTo(replyTo_rootStatus1)
@@ -51,6 +50,21 @@ class TwitterFeedFactorySpec : Spek({
                     assertThat(repliesTo_repliesTo_repliesTo_Status1).hasSize(0)
                 }
 
+            }
+
+            on("getFeed() and reloading refreshReplies() on level 2 replies") {
+                val feed : List<TwitterFeedEntry> = factory.getFeed(Arrays.asList(screenName))
+
+                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.find { e -> e.status.equals(rootStatus1) }!!.replies
+                val repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_Status1.flatMap { e -> e.replies }
+
+                repliesTo_repliesTo_Status1.forEach { e -> e.refreshReplies() }
+                val repliesTo_repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_repliesTo_Status1.flatMap { e -> e.replies }
+
+                it("should load level 3 entries") {
+                    assertThat(repliesTo_repliesTo_repliesTo_Status1).hasSize(1)
+                    assertThat(repliesTo_repliesTo_repliesTo_Status1[0].status).isEqualTo(replyTo_replyTo_replyTo_rootStatus1)
+                }
             }
 
         }
