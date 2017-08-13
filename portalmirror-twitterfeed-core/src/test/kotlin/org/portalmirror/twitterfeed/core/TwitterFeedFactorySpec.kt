@@ -2,6 +2,7 @@ package org.portalmirror.twitterfeed.core
 
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
@@ -23,7 +24,7 @@ class TwitterFeedFactorySpec : Spek({
         val factory : TwitterFeedFactory =  TwitterFeedFactory(repository)
 
 
-        describe("TwitterRepositoryMock for 'twitterapi' returns a status hierarchy with depth of 3") {
+        context("TwitterRepositoryMock for 'twitterapi' returns a status hierarchy with depth of 3") {
 
             val screenName : String = "twitterapi"
 
@@ -33,9 +34,9 @@ class TwitterFeedFactorySpec : Spek({
             `when`(repository.getAllRepliesToStatus(replyTo_replyTo_rootStatus1)).thenReturn(Arrays.asList(replyTo_replyTo_replyTo_rootStatus1))
 
             on("getFeed()") {
-                val feed : List<TwitterFeedEntry> = factory.getFeed(Arrays.asList(screenName))
+                val feed = factory.getFeed(Arrays.asList(screenName))
 
-                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.find { e -> e.status.equals(rootStatus1) }!!.replies
+                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.feedEntries.find { e -> e.status.equals(rootStatus1) }!!.replies
                 val repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_Status1.flatMap { e -> e.replies }
                 val repliesTo_repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_repliesTo_Status1.flatMap { e -> e.replies }
 
@@ -53,9 +54,9 @@ class TwitterFeedFactorySpec : Spek({
             }
 
             on("getFeed() and reloading refreshReplies() on level 2 replies") {
-                val feed : List<TwitterFeedEntry> = factory.getFeed(Arrays.asList(screenName))
+                val feed = factory.getFeed(Arrays.asList(screenName))
 
-                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.find { e -> e.status.equals(rootStatus1) }!!.replies
+                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.feedEntries.find { e -> e.status.equals(rootStatus1) }!!.replies
                 val repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_Status1.flatMap { e -> e.replies }
 
                 repliesTo_repliesTo_Status1.forEach { e -> e.refreshReplies() }
