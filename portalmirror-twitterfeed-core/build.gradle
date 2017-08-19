@@ -50,6 +50,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.6'
     compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
+    compile 'com.google.guava:guava:23.0-android'
 
 
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'

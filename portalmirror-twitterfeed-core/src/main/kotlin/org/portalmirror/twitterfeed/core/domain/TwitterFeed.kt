@@ -5,7 +5,7 @@ import com.google.common.collect.TreeTraverser
 /**
  * Created by arturro on 13/08/17.
  */
-class TwitterFeed(val feedEntries : List<TwitterFeedEntry>) {
+class TwitterFeed(val screenName: String, val feedEntries : List<TwitterFeedEntry>) {
 
     fun findEntry(statusId : Long) : TwitterFeedEntry?{
 

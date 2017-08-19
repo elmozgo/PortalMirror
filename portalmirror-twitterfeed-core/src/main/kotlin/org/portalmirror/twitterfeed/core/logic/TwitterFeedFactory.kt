@@ -11,9 +11,8 @@ val MAX_EAGER_LOADING_FEED_DEPTH : Int = 2
 
 class TwitterFeedFactory(val repository: TwitterRepository) {
 
-    fun getFeed(screenNames : List<String>) : TwitterFeed {
-        return TwitterFeed(screenNames
-                .flatMap { name -> repository.getTop20StatusesFromTimeline(name)}
+    fun getFeed(screenName: String) : TwitterFeed {
+        return TwitterFeed(screenName, repository.getTop20StatusesFromTimeline(screenName)
                 .map { status -> TwitterFeedEntry(status, repository) })
     }
 }
