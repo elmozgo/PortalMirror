@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+
+  <div class="twittermirror-container" id="the-container">
+    <ul class="feed-list">
+      <li data-pmtf-details="One"><p>1</p></li>
+      <li data-pmtf-details="Two"><p>2</p></li>
+      <li data-pmtf-details="Three"><p>3</p></li>
+      <li data-pmtf-details="Four"><p>4</p></li>
+    </ul>
+    <div class="right-box">
+      <div class="feed-details">text</div>
+      <div class="feed-replies"></div>
+    </div>
+  </div>
+  <script src="bower_components/hamsterjs/hamster.js"></script>
+  <script src="main.js"></script>
+
+  <script>
+    var ui = new PortalMirrorTwitterFeedUi(document.getElementById('the-container'));
+    ui.init();
+
+  </script>
+
+</body>
+
+</html>

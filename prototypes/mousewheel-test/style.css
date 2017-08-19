@@ -1,0 +1,29 @@
+.twittermirror-container {
+  display: flex; }
+  .twittermirror-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1; }
+  .twittermirror-container li {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none; }
+    .twittermirror-container li.active {
+      background-color: #4CAF50;
+      color: white; }
+    .twittermirror-container li.active.pressed {
+      background-color: #4C6F50;
+      color: white; }
+  .twittermirror-container .right-box {
+    margin-left: 16px; }
+    .twittermirror-container .right-box .feed-details {
+      display: block; }
+    .twittermirror-container .right-box .feed-replies {
+      display: none; }
+  .twittermirror-container.pressed-mode .right-box .feed-details {
+    display: none; }
+  .twittermirror-container.pressed-mode .right-box .feed-replies {
+    display: block; }
