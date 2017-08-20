@@ -6,17 +6,17 @@
 
 function PortalMirrorTwitterFeedUi(containerElement) {
     this.containerElement = containerElement;
-    this.feedList = containerElement.getElementsByClassName('feed-list')[0];
+    this.statusList = containerElement.getElementsByClassName('status-list')[0];
     this.feedDetails = containerElement.getElementsByClassName('feed-details')[0];
     this.feedReplies = containerElement.getElementsByClassName('feed-replies')[0];
-    this.rightBox = containerElement.getElementsByClassName('right-box')[0];
+    this.statusContent = containerElement.getElementsByClassName('status-content')[0];
 }
 
 PortalMirrorTwitterFeedUi.prototype = {
 
     menuItemDown: function () {
         console.log('mousewheel down');
-        let oldActive = this.feedList.getElementsByClassName('active')[0];
+        let oldActive = this.statusList.getElementsByClassName('active')[0];
         if (oldActive.nextElementSibling) {
             oldActive.classList.remove('active');
             oldActive.nextElementSibling.classList.add('active');
@@ -28,7 +28,7 @@ PortalMirrorTwitterFeedUi.prototype = {
     menuItemUp: function () {
 
         console.log('mousewheel up');
-        let oldActive = this.feedList.getElementsByClassName('active')[0];
+        let oldActive = this.statusList.getElementsByClassName('active')[0];
         if (oldActive.previousElementSibling) {
             oldActive.classList.remove('active');
             oldActive.previousElementSibling.classList.add('active');
@@ -57,7 +57,7 @@ PortalMirrorTwitterFeedUi.prototype = {
     initOnUiEvent: function () {
 
         let that = this;
-        let feedList = this.feedList;
+        let statusList = this.statusList;
         let observer = new MutationObserver(function (mutations) {
 
             let setToActiveMutation = mutations.filter(
@@ -78,7 +78,7 @@ PortalMirrorTwitterFeedUi.prototype = {
 
         });
 
-        observer.observe(feedList, {
+        observer.observe(statusList, {
             attributes: true,
             childList: false,
             characterData: false,
@@ -87,7 +87,7 @@ PortalMirrorTwitterFeedUi.prototype = {
     },
 
     onActiveChange: function (activeElement) {
-        this.feedDetails.innerHTML = activeElement.getAttribute('data-pmtf-details');
+        this.feedDetails.innerHTML = activeElement.getAttribute('data-pmtf-statusid');
     },
 
     setupButtonPressedHandling: function () {
@@ -98,7 +98,7 @@ PortalMirrorTwitterFeedUi.prototype = {
             if (event.button === 1) { //wheel button
 
                 console.log('mousewheel button pressed');
-                let active = that.feedList.getElementsByClassName('active')[0];
+                let active = that.statusList.getElementsByClassName('active')[0];
                 that.containerElement.classList.toggle('pressed-mode');
                 active.classList.toggle('pressed');
 
@@ -107,7 +107,7 @@ PortalMirrorTwitterFeedUi.prototype = {
     },
 
     onPressedChange: function (pressedElement) {
-        this.feedReplies.innerHTML = pressedElement.getAttribute('data-pmtf-details') + " is pressed.";
+        this.feedReplies.innerHTML = pressedElement.getAttribute('data-pmtf-statusid') + " is pressed.";
     },
 
     init: function () {
@@ -116,7 +116,7 @@ PortalMirrorTwitterFeedUi.prototype = {
         this.setupButtonPressedHandling();
         this.initOnUiEvent();
 
-        this.feedList.children[0].classList.add('active');
+        this.statusList.children[0].classList.add('active');
 
     }
 

@@ -1,0 +1,11 @@
+{
+  "name": "mousewheel-test-backend",
+  "version": "1.0.0",
+  "description": "backend for mousewheel-test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "artur karwowski",
+  "license": "GPL-3.0"
+}
