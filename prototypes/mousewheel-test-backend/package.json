@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "artur karwowski",
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "dependencies": {
+    "express": "^4.15.4",
+    "http": "0.0.0",
+    "path": "^0.12.7"
+  }
 }

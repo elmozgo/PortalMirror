@@ -3,18 +3,17 @@
 
 <head>
   <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="stylesheet" type="text/css" href="fonts.css" />
 </head>
 
-<body>
-
+<body style="height:500px">
   <div class="twittermirror-container" id="the-container">
     <ul class="status-list">
-      <li data-pmtf-statusid="1" data-ptmf-screenname="elmozgo">
-        <img class="status-list-avatar" src="http://localhost:8080/static/avatar-400x400.jpg"/>
+      <li data-pmtf-statusid="1" data-pmtf-screenname="elmozgo" data-pmtf-multimedia="image">
+        <img class="status-list-avatar" src="avatars/avatar-400x400.jpg"/>
         <div class="status-metadata">
           <span class="screenname">@elmozgo</span>
           <span class="name">Artur Karwowski</span>
-          <span class="multimedia">image</span>
         </div>
         <div class-"status-stats">
           <span class="retweeted">20</span>
@@ -26,34 +25,53 @@
         </div>
         <span class="text">check this cool image:</span>
       </li>
-      <li data-pmtf-statusid="2" data-ptmf-screenname="test2">
-          <img class="status-list-avatar" src="http://localhost:8080/static/avatar-2027369_960_720.png"/>
-          <span class="screenname">@test2</span>
-          <span class="name">test2</span>
-          <span class="replied">0</span>
-          <span class="retweeted">0</span>
-          <span class="liked">1</span>
-          <span class="multimedia">gif</span>
-          <span class="text">a gif</span>
+      <li data-pmtf-statusid="2" data-pmtf-screenname="test2" data-pmtf-multimedia="gif">
+          <img class="status-list-avatar" src="avatars/avatar-2027369_960_720.png"/>
+          <div class="status-metadata">
+            <span class="screenname">@elmozgo</span>
+            <span class="name">AK</span>
+          </div>
+          <div class-"status-stats">
+            <span class="retweeted">20</span>
+            <span class="liked">30</span>
+            <span class="replied">10</span>
+          </div>
+          <div class="status-header">
+              <span class="replied-to">Replied to : @elmozgo2</span>
+          </div>
+          <span class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque interdum rutrum sodales. Nullam mattis fermentum libero, non volutpat.</span>
       </li>
-      <li data-pmtf-statusid="3" data-ptmf-screenname="test3">
-          <img class="status-list-avatar" src="http://localhost:8080/static/woman-159169_960_720.png"/>
-          <span class="screenname">@test3</span>
-          <span class="name">test3</span>
-          <span class="replied">0</span>
-          <span class="retweeted">0</span>
-          <span class="liked">1</span>
-          <span class="multimedia">video</span>
-          <span class="text">a video</span>
+      <li data-pmtf-statusid="3" data-pmtf-screenname="test3" data-pmtf-multimedia="video">
+          <img class="status-list-avatar" src="avatars/woman-159169_960_720.png"/>
+          <div class="status-metadata">
+            <span class="screenname">@elmozgo</span>
+            <span class="name">Artur Karwowski</span>
+          </div>
+          <div class-"status-stats">
+            <span class="retweeted">20</span>
+            <span class="liked">30</span>
+            <span class="replied">10</span>
+          </div>
+          <div class="status-header">
+              <span class="replied-to">Replied to : @elmozgo2</span>
+          </div>
+          <span class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque interdum rutrum sodales. Nullam mattis fermentum libero, non volutpat.</span>
       </li>
-      <li data-pmtf-statusid="4" data-ptmf-screenname="test4">
-          <img class="status-list-avatar" src="http://localhost:8080/static/avatar-1789663_960_720.png"/>
-          <span class="screenname">@test4</span>
-          <span class="name">test4</span>
-          <span class="replied">1</span>
-          <span class="retweeted">1</span>
-          <span class="liked">1</span>
-          <span class="text">standerd status</span>
+      <li data-pmtf-statusid="4" data-pmtf-screenname="test4">
+          <img class="status-list-avatar" src="avatars/avatar-1789663_960_720.png"/>
+          <div class="status-metadata">
+            <span class="screenname">@elmozgo</span>
+            <span class="name">Artur Karwowski</span>
+          </div>
+          <div class-"status-stats">
+            <span class="retweeted">20</span>
+            <span class="liked">30</span>
+            <span class="replied">10</span>
+          </div>
+          <div class="status-header">
+              <span class="replied-to">Replied to : @elmozgo2</span>
+          </div>
+          <span class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque interdum rutrum sodales. Nullam mattis fermentum libero, non volutpat.</span>
       </li>
     </ul>
     <div class="status-content">
@@ -62,6 +80,8 @@
     </div>
   </div>
   <script src="bower_components/hamsterjs/hamster.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/jquery.scrollTo/jquery.scrollTo.min.js"></script>
   <script src="main.js"></script>
 
   <script>

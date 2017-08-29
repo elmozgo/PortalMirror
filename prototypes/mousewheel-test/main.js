@@ -14,12 +14,18 @@ function PortalMirrorTwitterFeedUi(containerElement) {
 
 PortalMirrorTwitterFeedUi.prototype = {
 
+    scrollToActive: function (newActive) {
+        newActive.classList.add('active');
+        jQuery(this.statusList).scrollTo(newActive, 500, {over:0});
+    },
+
     menuItemDown: function () {
         console.log('mousewheel down');
         let oldActive = this.statusList.getElementsByClassName('active')[0];
         if (oldActive.nextElementSibling) {
             oldActive.classList.remove('active');
-            oldActive.nextElementSibling.classList.add('active');
+            var newActive = oldActive.nextElementSibling;
+            this.scrollToActive(newActive);
         } else {
             //actionOnLastElement();
         }
@@ -31,24 +37,34 @@ PortalMirrorTwitterFeedUi.prototype = {
         let oldActive = this.statusList.getElementsByClassName('active')[0];
         if (oldActive.previousElementSibling) {
             oldActive.classList.remove('active');
-            oldActive.previousElementSibling.classList.add('active');
+            var newActive = oldActive.previousElementSibling;
+            this.scrollToActive(newActive);
         } else {
             //actionOnFirstElement();
         }
 
     },
+    
+    wheelHandlingInProgress: false,
 
     setupWheelHandling: function () {
 
         let that = this;
+
         Hamster(document).wheel(function (event, delta, deltaX, deltaY) {
             if (!that.containerElement.classList.contains('pressed-mode')) {
-                if (delta > 0) {
-                    that.menuItemUp();
-                } else {
-                    that.menuItemDown();
-                }
+                if(!that.wheelHandlingInProgress) {
+                    that.wheelHandlingInProgress = true;
 
+                    if (delta > 0) {
+                        that.menuItemUp();
+                    } else {
+                        that.menuItemDown();
+                    }
+                    setTimeout(function() {
+                        that.wheelHandlingInProgress = false;
+                    }, 500);
+                }
                 event.preventDefault();
             }
         });
@@ -121,5 +137,4 @@ PortalMirrorTwitterFeedUi.prototype = {
     }
 
 };
-
 
