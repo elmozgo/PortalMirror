@@ -112,3 +112,7 @@ img.status-list-avatar {
 .twittermirror-container.pressed-mode .status-content .feed-replies {
   display: block;
 }
+
+::-webkit-scrollbar { 
+  display: none; 
+}

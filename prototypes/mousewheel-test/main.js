@@ -16,6 +16,8 @@ PortalMirrorTwitterFeedUi.prototype = {
 
     scrollToActive: function (newActive) {
         newActive.classList.add('active');
+
+       //if(newActive.INDEX > MAX_HEIGHT / ITEM_HEIGHT)
         jQuery(this.statusList).scrollTo(newActive, 500, {over:0});
     },
 
@@ -131,6 +133,13 @@ PortalMirrorTwitterFeedUi.prototype = {
         this.setupWheelHandling();
         this.setupButtonPressedHandling();
         this.initOnUiEvent();
+
+        //this.statusCount = TODO: policz liczbe wszystkich wpisow
+        //this.statusListItemPxHeight = TODO: policz wysokosc statusu
+        //this.listVisiblePxHeight = TODO: policz widoczna liste
+        
+        //TODO: ponumeruj liste albo znajdz jak dostac sie latwo do child indexu aktywnego itemu
+        
 
         this.statusList.children[0].classList.add('active');
 
