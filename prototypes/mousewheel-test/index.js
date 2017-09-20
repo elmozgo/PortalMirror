@@ -10,9 +10,5 @@ http.listen(APP_PORT, function () {
     console.log('app listening on port ' + APP_PORT);
 });
 
-app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.get('/', function (req, res) {
-    res.send('<p>Hello World!</p>');
-});
