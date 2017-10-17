@@ -13,6 +13,6 @@ class TwitterFeedFactory(val repository: TwitterRepository) {
 
     fun getFeed(screenName: String) : TwitterFeed {
         return TwitterFeed(screenName, repository.getTop20StatusesFromTimeline(screenName)
-                .map { status -> TwitterFeedEntry(status, repository) })
+                .map { status -> TwitterFeedEntry(screenName, status, repository) })
     }
 }

@@ -25,7 +25,7 @@ class TwitterFeedSpec : Spek({
 
             Mockito.`when`(repository.getAllRepliesToStatus(rootStatus1)).thenReturn(Arrays.asList(replyTo_rootStatus1))
             Mockito.`when`(repository.getAllRepliesToStatus(replyTo_rootStatus1)).thenReturn(Arrays.asList(replyTo_replyTo_rootStatus1))
-            val root = TwitterFeedEntry(rootStatus1, repository)
+            val root = TwitterFeedEntry("root", rootStatus1, repository)
             val feed = TwitterFeed("root", Arrays.asList(root))
 
             on("findEntry(id)") {

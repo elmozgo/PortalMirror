@@ -7,6 +7,7 @@ import twitter4j.Status
 
 class TwitterFeedEntry {
 
+    val screenName : String
     val status : Status
     var replies : List<TwitterFeedEntry>
     private val repository: TwitterRepository
@@ -16,8 +17,9 @@ class TwitterFeedEntry {
     /***
      * Constructor to create root entries
      */
-    constructor(status : Status, repository: TwitterRepository) {
+    constructor(screenName : String, status : Status, repository: TwitterRepository) {
 
+        this.screenName = screenName
         this.status = status
         this.repository = repository
         this.depth = 0
@@ -27,6 +29,7 @@ class TwitterFeedEntry {
 
     constructor(status : Status, repository: TwitterRepository, parent : TwitterFeedEntry) {
 
+        this.screenName = status.user.screenName
         this.status = status
         this.repository = repository
         this.depth = parent.depth + 1
