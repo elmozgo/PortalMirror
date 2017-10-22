@@ -25,6 +25,7 @@ class TwitterFeedEntry {
         this.depth = 0
         this.replies = getReplies(repository, status)
         this.createdAt = DateTime.now()
+
     }
 
     constructor(status : Status, repository: TwitterRepository, parent : TwitterFeedEntry) {

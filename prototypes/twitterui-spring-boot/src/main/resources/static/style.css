@@ -29,53 +29,44 @@ body {
       border-right-width: 5px;
       border-right-style: solid;
       border-right-color: transparent; }
-      .twittermirror-container ul.status-list li img {
+      .twittermirror-container ul.status-list li img.status-list-avatar {
         opacity: 0.5;
-        transition: opacity 0.5s ease-out; }
+        transition: opacity 0.5s ease-out;
+        border-radius: 100%;
+        max-width: 80px;
+        max-height: 80px;
+        width: auto;
+        height: auto; }
+      .twittermirror-container ul.status-list li .text {
+        grid-area: status-text; }
+      .twittermirror-container ul.status-list li .status-list-avatar {
+        grid-area: status-list-avatar; }
+      .twittermirror-container ul.status-list li .status-metadata {
+        grid-area: status-metadata; }
+      .twittermirror-container ul.status-list li .status-header {
+        grid-area: status-header; }
+      .twittermirror-container ul.status-list li .status-stats {
+        grid-area: status-stats; }
       .twittermirror-container ul.status-list li.active {
         background-clip: border-box;
         color: #fff;
         border-right-color: #fff;
         transition: border-right-color 0.5s ease-out, color 0.5s ease-out; }
-        .twittermirror-container ul.status-list li.active img {
+        .twittermirror-container ul.status-list li.active img.status-list-avatar {
           opacity: 1;
           transition: opacity 1s ease-in; }
   .twittermirror-container .status-content {
     grid-area: status-content;
-    margin-left: 16px; }
+    margin-left: 16px;
+    transition: opacity 1s ease-out; }
     .twittermirror-container .status-content .feed-details {
       display: block; }
     .twittermirror-container .status-content .feed-replies {
-      display: none; }
-  .twittermirror-container.pressed-mode .status-content .feed-details {
-    display: none; }
-  .twittermirror-container.pressed-mode .status-content .feed-replies {
-    display: block; }
-  .twittermirror-container.loading-mode {
-    transition: opacity 1s ease-in;
-    opacity: 0; }
+      display: block; }
 
-.status-list-avatar {
-  grid-area: status-list-avatar; }
-
-.status-metadata {
-  grid-area: status-metadata; }
-
-.status-header {
-  grid-area: status-header; }
-
-.status-stats {
-  grid-area: status-stats; }
-
-.text {
-  grid-area: status-text; }
+.loading-mode {
+  transition: opacity 1s ease-in;
+  opacity: 0; }
 
 ::-webkit-scrollbar {
   display: none; }
-
-img.status-list-avatar {
-  border-radius: 100%;
-  max-width: 80px;
-  max-height: 80px;
-  width: auto;
-  height: auto; }

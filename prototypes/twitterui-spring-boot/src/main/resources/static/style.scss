@@ -33,16 +33,38 @@ body {
             border-right-width: 5px;
             border-right-style: solid;
             border-right-color: transparent;
-            img {
+
+            img.status-list-avatar {
                 opacity: 0.5;
                 transition: opacity 0.5s ease-out;
+                border-radius: 100%;
+                max-width: 80px;
+                max-height: 80px;
+                width: auto;
+                height: auto;
             }
+            .text {
+                grid-area: status-text;
+            }
+            .status-list-avatar {
+                grid-area: status-list-avatar;
+            }
+            .status-metadata {
+                grid-area: status-metadata;
+            }
+            .status-header {
+                grid-area: status-header;
+            }
+            .status-stats {
+                grid-area: status-stats;
+            }
+
             &.active {
                 background-clip: border-box;
                 color: $white;
                 border-right-color: $white;
                 transition: border-right-color 0.5s ease-out, color 0.5s ease-out;
-                img {
+                img.status-list-avatar {
                     opacity: 1;
                     transition: opacity 1s ease-in;
                 }
@@ -52,55 +74,22 @@ body {
     .status-content {
         grid-area: status-content;
         margin-left: 16px;
+        transition: opacity 1s ease-out;
         .feed-details {
             display: block;
-        }
-        .feed-replies {
-            display: none;
-        }
-    }
-    &.pressed-mode .status-content {
-        .feed-details {
-            display: none;
         }
         .feed-replies {
             display: block;
         }
     }
-    &.loading-mode {
-        transition: opacity 1s ease-in;
-        opacity: 0;
-    }
 }
 
-.status-list-avatar {
-    grid-area: status-list-avatar;
+.loading-mode {
+    transition: opacity 1s ease-in;
+    opacity: 0;
 }
 
-.status-metadata {
-    grid-area: status-metadata;
-}
-
-.status-header {
-    grid-area: status-header;
-}
-
-.status-stats {
-    grid-area: status-stats;
-}
-
-.text {
-    grid-area: status-text;
-}
-
-::-webkit-scrollbar {
+::-webkit-scrollbar,  {
     display: none;
 }
 
-img.status-list-avatar {
-    border-radius: 100%;
-    max-width: 80px;
-    max-height: 80px;
-    width: auto;
-    height: auto;
-}

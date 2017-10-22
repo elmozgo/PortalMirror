@@ -4,45 +4,121 @@
     'use strict';
 }());
 
-function hasMediaType(mediaEntities, type) {
+function hasMediaType (entry, type) {
 
-    return mediaEntities.filter(e => e.type == type).length > 0;    
+    return entry.status.mediaEntities.filter(e => e.type == type).length > 0;    
+}
+function getPoster (entry, type) {
+    return entry.status.mediaEntities.filter(e => e.type == type)[0].mediaURL;
 }
 
-let menuItemTemplate = function(entry) { return `
-                    <li data-pmtf-statusid="${entry.status.id}" data-pmtf-screenname="${entry.screenName}" >
-                        <img class="status-list-avatar" src="${entry.status.user.profileImageURL}}"/>
-                        <div class="status-metadata">
-                            <span class="screenname">${entry.status.user.screenName}</span>
-                            <span class="name">${entry.status.user.name}</span>
-                        </div>
-                        <div class-"status-stats">
-                            <span class="retweeted">${entry.status.retweetCount}</span>
-                            <span class="liked">${entry.status.favoriteCount}</span>
-                            <span class="replied">${entry.replies.length}+</span>
-                            
-                            ${hasMediaType(entry.status.mediaEntities, 'photo') ? `
-                                <span class="photo">p</span>
-                            ` : ``}
-                            ${hasMediaType(entry.status.mediaEntities, 'animated_gif') ? `
-                                <span class="animated-gif">g</span>
-                            ` : ``}
-                            ${hasMediaType(entry.status.mediaEntities, 'video') ? `
-                                <span class="video">v</span>
-                            ` : ``}
+function getHighestBitrateVideoVariant(entry, type) {
+    let videoMediaEntity = entry.status.mediaEntities.filter(e => e.type == type)[0];
+    
+    return videoMediaEntity.videoVariants.sort(function(a, b) {
+        return b.bitrate - a.bitrate; //desc
+    })[0];
+}
 
-                        </div>
-                        <div class="status-header">
-                            ${entry.status.inReplyToStatusId != -1 ? `
-                                <span class="replied-to">Replied to: @${entry.status.inReplyToScreenName}</span>
-                            ` : ``}
-                            ${entry.status.isRetweeted != -1 ? `
-                                <span class="retweeted-by">Retweeted by: @${entry.screenName}</span>
-                            ` : ``}
-                        </div>
-                        <span class="text">${entry.status.text}</span>
-                    </li>
-                    `;};
+function formatCreatedAtDate (createdAtMilis) {
+    let createdAtDate = moment(createdAtMilis);
+    let age = moment.duration(moment().diff(createdAtDate));
+    if(age.asHours() > 24) {
+        return createdAtDate.format("D MMM YYYY, HH:mm"); 
+    } else {
+        return createdAtDate.fromNow();
+    }
+}
+
+let statusRepliesTemplate = function (reply) { return `
+    
+    <li>
+        <span class="reply-screenname">@${reply.status.user.screenName}</span>
+        <span class="reply-name">${reply.status.user.name}</span>
+        <span class="reply-text">${reply.status.text}</span>
+        ${reply.replies.length > 0 ? `
+            <ol>
+                ${reply.replies.map(
+                    reply => statusRepliesTemplate(reply)).join('').trim()}
+            </ol>
+        ` :``}
+    </li>
+
+`;};
+
+let statusContentTemplate = function(entry) { return `
+    <div class="feed-details">
+        <p class="text">${entry.status.text}</p>
+        ${hasMediaType(entry, 'photo') ? `
+            <img class="status-img" src="${getPoster(entry, 'photo')}"/>
+        ` : ``}
+        ${hasMediaType(entry, 'animated_gif') ? `
+            <video
+                class="status-gif"
+                preload="none"
+                autoplay="true"
+                poster="${getPoster(entry, 'animated_gif')}" 
+                playsinline="true"
+                loop="true"
+                src="${getHighestBitrateVideoVariant(entry, 'animated_gif').url}"
+                type="${getHighestBitrateVideoVariant(entry, 'animated_gif').contentType}" >
+            </video>
+        ` : ``}
+        ${hasMediaType(entry, 'video') ? `
+            <video
+                class="status-video"
+                preload="none"
+                poster="${getPoster(entry, 'video')}" 
+                playsinline="true"
+                loop="true"
+                src="${getHighestBitrateVideoVariant(entry, 'video').url}"
+                type="${getHighestBitrateVideoVariant(entry, 'video').contentType}" >
+            </video>
+        ` : ``}
+    </div>
+    <div class="feed-replies">
+        <ol>
+            ${entry.replies.map(
+                reply => statusRepliesTemplate(reply)).join('').trim()}
+        </ol>
+    </div>
+`;};
+
+let menuItemTemplate = function(entry) { return `
+    <li data-pmtf-statusid="${entry.status.id}" data-pmtf-screenname="${entry.screenName}" >
+        <img class="status-list-avatar" src="${entry.status.user.profileImageURL}"/>
+        <div class="status-metadata">
+            <span class="screenname">@${entry.status.user.screenName}</span>
+            <span class="name">${entry.status.user.name}</span>
+        </div>
+        <div class-"status-stats">
+            <span class="retweeted">${entry.status.retweetCount}</span>
+            <span class="liked">${entry.status.favoriteCount}</span>
+            <span class="replied">${entry.replies.length}+</span>
+            
+            ${hasMediaType(entry, 'photo') ? `
+                <span class="photo">p</span>
+            ` : ``}
+            ${hasMediaType(entry, 'animated_gif') ? `
+                <span class="animated-gif">g</span>
+            ` : ``}
+            ${hasMediaType(entry, 'video') ? `
+                <span class="video">v</span>
+            ` : ``}
+
+        </div>
+        <div class="status-header">
+            ${entry.status.inReplyToStatusId != -1 ? `
+                <span class="replied-to">in reply to: @${entry.status.inReplyToScreenName}</span>
+            ` : ``}
+            ${entry.status.isRetweeted != -1 ? `
+                <span class="retweeted-by">retweeted by: @${entry.screenName}</span>
+            ` : ``}
+            <span class="tweeted-on-date">${formatCreatedAtDate(entry.status.createdAt)}</span>
+        </div>
+        <span class="text">${entry.status.text}</span>
+    </li>
+`;};
 
 function PortalMirrorTwitterFeedUi(containerElement, feedUrl) {
     this.feedUrl = feedUrl;
@@ -147,7 +223,19 @@ PortalMirrorTwitterFeedUi.prototype = {
     },
 
     onActiveChange: function (activeElement) {
-        this.feedDetails.innerHTML = activeElement.getAttribute('data-pmtf-statusid');
+        
+        this.statusContent.classList.add('loading-mode');
+
+        let activeStatusId = activeElement.getAttribute('data-pmtf-statusid');
+
+        let activeEntry = this.feedJsonArray.filter(
+            entry => entry.status.id == activeStatusId)[0];
+
+        setTimeout(() => {
+            this.statusContent.innerHTML = statusContentTemplate(activeEntry);
+            this.statusContent.classList.remove('loading-mode');
+        }, 500);
+        
     },
 
     setupButtonPressedHandling: function () {
@@ -164,10 +252,14 @@ PortalMirrorTwitterFeedUi.prototype = {
 
             }
         };
+        document.onauxclick = document.onclick; //for chrome
     },
 
     onPressedChange: function (pressedElement) {
-        this.feedReplies.innerHTML = pressedElement.getAttribute('data-pmtf-statusid') + " is pressed.";
+        let activeStatusId = pressedElement.getAttribute('data-pmtf-statusid');
+
+        this.feedReplies.innerHTML = 
+            pressedElement.getAttribute('data-pmtf-statusid') + " is pressed.";
     },
 
     loadContent: function () {
@@ -176,7 +268,7 @@ PortalMirrorTwitterFeedUi.prototype = {
             getJson(self.feedUrl).then(function (feedJsonArray) {
                 
                     self.feedJsonArray = feedJsonArray;
-                    let statusListHtml = feedJsonArray.map(entry => menuItemTemplate(entry)).join('');
+                    let statusListHtml = feedJsonArray.map(entry => menuItemTemplate(entry)).join('').trim();
                     self.statusList.innerHTML = statusListHtml;
                     resolve();
             });
@@ -187,7 +279,7 @@ PortalMirrorTwitterFeedUi.prototype = {
 
     init: function () {
 
-        this.statusList.classList.add('loading-mode');
+        this.containerElement.classList.add('loading-mode');
 
         this.loadContent().then(() => {
             
@@ -195,7 +287,7 @@ PortalMirrorTwitterFeedUi.prototype = {
             this.setupButtonPressedHandling();
             this.initOnUiEvent();
             this.statusList.children[0].classList.add('active');
-            this.statusList.classList.remove('loading-mode');
+            this.containerElement.classList.remove('loading-mode');
         });
 
         

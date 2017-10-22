@@ -8,10 +8,10 @@ val rootStatus1: Status = TwitterObjectFactory.createStatus(
         """
 
         {
-    "created_at": "Thu Apr 06 10:00:00 +0000 2017",
+    "created_at": "Fri Oct 20 15:00:00 +0000 2017",
     "id": 850007368138018001,
     "id_str": "850007368138018001",
-    "text": "rootStatus1",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae ligula aliquam lectus lobortis porta non a diam. Proin fringilla augue.",
     "truncated": false,
     "entities": {
       "hashtags": [],
@@ -28,10 +28,10 @@ val rootStatus1: Status = TwitterObjectFactory.createStatus(
     "user": {
       "id": 6253282,
       "id_str": "6253282",
-      "name": "Twitter API",
-      "screen_name": "twitterapi",
-      "location": "San Francisco, CA",
-      "description": "The Real Twitter API. I tweet about API changes, service issues and happily answer questions about Twitter and our API. Don't get an answer? It's on my website.",
+      "name": "Artur Karwowski",
+      "screen_name": "elmozgo",
+      "location": "London, UK",
+      "description": "test",
       "url": "http://t.co/78pYTvWfJd",
       "entities": {
         "url": {
@@ -70,8 +70,8 @@ val rootStatus1: Status = TwitterObjectFactory.createStatus(
       "profile_background_image_url": "http://pbs.twimg.com/profile_background_images/656927849/miyt9dpjz77sc0w3d4vj.png",
       "profile_background_image_url_https": "https://pbs.twimg.com/profile_background_images/656927849/miyt9dpjz77sc0w3d4vj.png",
       "profile_background_tile": true,
-      "profile_image_url": "http://pbs.twimg.com/profile_images/2284174872/7df3h38zabcvjylnyfe3_normal.png",
-      "profile_image_url_https": "https://pbs.twimg.com/profile_images/2284174872/7df3h38zabcvjylnyfe3_normal.png",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/899321502218190853/4accIQWu_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/899321502218190853/4accIQWu_normal.jpg",
       "profile_banner_url": "https://pbs.twimg.com/profile_banners/6253282/1431474710",
       "profile_link_color": "0084B4",
       "profile_sidebar_border_color": "C0DEED",
