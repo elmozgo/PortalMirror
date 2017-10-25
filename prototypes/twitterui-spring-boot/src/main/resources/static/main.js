@@ -108,10 +108,10 @@ let menuItemTemplate = function(entry) { return `
 
         </div>
         <div class="status-header">
-            ${entry.status.inReplyToStatusId != -1 ? `
+            ${entry.status.inReplyToStatusId > -1 ? `
                 <span class="replied-to">in reply to: @${entry.status.inReplyToScreenName}</span>
             ` : ``}
-            ${entry.status.isRetweeted != -1 ? `
+            ${entry.status.retweeted === true ? `
                 <span class="retweeted-by">retweeted by: @${entry.screenName}</span>
             ` : ``}
             <span class="tweeted-on-date">${formatCreatedAtDate(entry.status.createdAt)}</span>

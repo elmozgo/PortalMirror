@@ -33,8 +33,8 @@ class TwitterFeedFactorySpec : Spek({
             `when`(repository.getAllRepliesToStatus(replyTo_rootStatus1)).thenReturn(Arrays.asList(replyTo_replyTo_rootStatus1))
             `when`(repository.getAllRepliesToStatus(replyTo_replyTo_rootStatus1)).thenReturn(Arrays.asList(replyTo_replyTo_replyTo_rootStatus1))
 
-            on("getFeed()") {
-                val feed = factory.getFeed(screenName)
+            on("buildFeed()") {
+                val feed = factory.buildFeed(screenName)
 
                 val repliesTo_Status1 : List<TwitterFeedEntry> = feed.feedEntries.find { e -> e.status.equals(rootStatus1) }!!.replies
                 val repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_Status1.flatMap { e -> e.replies }
@@ -53,8 +53,8 @@ class TwitterFeedFactorySpec : Spek({
 
             }
 
-            on("getFeed() and reloading refreshReplies() on level 2 replies") {
-                val feed = factory.getFeed(screenName)
+            on("buildFeed() and reloading refreshReplies() on level 2 replies") {
+                val feed = factory.buildFeed(screenName)
 
                 val repliesTo_Status1 : List<TwitterFeedEntry> = feed.feedEntries.find { e -> e.status.equals(rootStatus1) }!!.replies
                 val repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_Status1.flatMap { e -> e.replies }

@@ -1,32 +1,84 @@
 package org.portalmirror.prototypes.twitterui;
 
+import static java.util.Arrays.asList;
 import static org.portalmirror.prototypes.twitterui.Fixtures.getMockFeed;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
+
 import org.portalmirror.twitterfeed.core.domain.TwitterFeed;
 import org.portalmirror.twitterfeed.core.domain.TwitterFeedEntry;
+import org.portalmirror.twitterfeed.core.logic.TwitterFeedFactory;
+import org.portalmirror.twitterfeed.core.logic.TwitterFeedService;
+import org.portalmirror.twitterfeed.core.logic.TwitterFeedSimpleCacheLoader;
+import org.portalmirror.twitterfeed.core.logic.TwitterRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import twitter4j.Status;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
+
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 @RestController
 public class FeedController {
+	
+	@Value("${oauth.consumer.key}")
+	private String oAuthConsumerKey;
+	@Value("${oauth.consumer.secret}")
+	private String oAuthConsumerSecret;
+	@Value("${oauth.access.token}")
+	private String oAuthAccessToken;
+	@Value("${oauth.access.token.secret}")
+	private String oAuthAccessTokenSecret;
+	
+	private TwitterFeedService service;
+	
+	@PostConstruct
+	public void setup() {
+		Configuration config = new ConfigurationBuilder()
+				.setDebugEnabled(true)
+				.setOAuthConsumerKey(oAuthConsumerKey)
+				.setOAuthConsumerSecret(oAuthConsumerSecret)
+				.setOAuthAccessToken(oAuthAccessToken)
+				.setOAuthAccessTokenSecret(oAuthAccessTokenSecret)
+				.build();
+		
+		TwitterRepository repo = new TwitterRepository(config);
+		TwitterFeedFactory factory = new TwitterFeedFactory(repo);
+		
+		TwitterFeedSimpleCacheLoader cacheLoader = new TwitterFeedSimpleCacheLoader(factory);
+		
+        LoadingCache<String, TwitterFeed> cache = CacheBuilder.newBuilder().maximumSize(3).expireAfterWrite(1, TimeUnit.MINUTES).build(cacheLoader);
 
+		
+		service = new TwitterFeedService(cache);
+	
+	}
+	
 	@GetMapping(value = "/feedentries", produces = { MediaType.APPLICATION_JSON_VALUE })
 	List<TwitterFeedEntry> getFeedEntries() {
+		
+		return service.getFeed(new HashSet<String>(asList("elmozgo", "BBCBreaking"))).stream().flatMap(feed -> feed.getFeedEntries().stream()).collect(Collectors.toList());
+	}
+
+	@GetMapping(value = "/mocked/feedentries", produces = { MediaType.APPLICATION_JSON_VALUE })
+	List<TwitterFeedEntry> getMockedFeedEntries() {
 		
 		return Stream.generate(() -> getMockFeed()).limit(10).flatMap(feed -> feed.getFeedEntries().stream()).collect(Collectors.toList());
 	}
 	
-	@GetMapping(value = "/feed", produces = { MediaType.APPLICATION_JSON_VALUE })
-	List<TwitterFeed> getFeed() {
+	@GetMapping(value = "/mocked/feed", produces = { MediaType.APPLICATION_JSON_VALUE })
+	List<TwitterFeed> getMockedFeed() {
 
 		return Arrays.asList(getMockFeed(), getMockFeed(), getMockFeed(), getMockFeed(), getMockFeed(), getMockFeed(),
 				getMockFeed(), getMockFeed(), getMockFeed());

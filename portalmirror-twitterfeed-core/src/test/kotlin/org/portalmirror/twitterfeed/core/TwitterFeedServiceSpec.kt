@@ -54,12 +54,12 @@ class TwitterFeedServiceSpec  : Spek({
                 val name5Feed = mock(TwitterFeed::class.java)
                 val name5Entry = mock(TwitterFeedEntry::class.java)
 
-                `when`(factory.getFeed("name1")).thenReturn(name1Feed)
-                `when`(factory.getFeed("name2")).thenReturn(name2Feed)
-                `when`(factory.getFeed("name3")).thenReturn(name3Feed, name3Feed2)
-                `when`(factory.getFeed("name4")).thenReturn(name4Feed, name4Feed2)
+                `when`(factory.buildFeed("name1")).thenReturn(name1Feed)
+                `when`(factory.buildFeed("name2")).thenReturn(name2Feed)
+                `when`(factory.buildFeed("name3")).thenReturn(name3Feed, name3Feed2)
+                `when`(factory.buildFeed("name4")).thenReturn(name4Feed, name4Feed2)
 
-                `when`(factory.getFeed("name5")).thenReturn(name5Feed)
+                `when`(factory.buildFeed("name5")).thenReturn(name5Feed)
                 `when`(name5Feed.findEntry(1)).thenReturn(name5Entry)
 
                 val service = TwitterFeedService(cache)
@@ -69,7 +69,7 @@ class TwitterFeedServiceSpec  : Spek({
 
                     it("should load the feed for name1") {
                         assertThat(feed).containsOnly(name1Feed)
-                        verify(factory, times(1)).getFeed("name1")
+                        verify(factory, times(1)).buildFeed("name1")
                     }
 
                 }
@@ -79,7 +79,7 @@ class TwitterFeedServiceSpec  : Spek({
 
                     it("should return the cached feed for name1") {
                         assertThat(feed).containsOnly(name1Feed)
-                        verify(factory, times(1)).getFeed("name1")
+                        verify(factory, times(1)).buildFeed("name1")
                     }
 
                 }
@@ -89,7 +89,7 @@ class TwitterFeedServiceSpec  : Spek({
 
                     it("should load the feed for name2") {
                         assertThat(feed).containsOnly(name2Feed)
-                        verify(factory, times(1)).getFeed("name2")
+                        verify(factory, times(1)).buildFeed("name2")
                     }
 
                 }
@@ -99,7 +99,7 @@ class TwitterFeedServiceSpec  : Spek({
 
                     it("should return the cached feed for name2") {
                         assertThat(feed).containsOnly(name2Feed)
-                        verify(factory, times(1)).getFeed("name2")
+                        verify(factory, times(1)).buildFeed("name2")
                     }
 
                 }
@@ -109,8 +109,8 @@ class TwitterFeedServiceSpec  : Spek({
 
                     it("should load the feed for name3 and name4") {
                         assertThat(feed).containsOnly(name3Feed, name4Feed)
-                        verify(factory, times(1)).getFeed("name3")
-                        verify(factory, times(1)).getFeed("name4")
+                        verify(factory, times(1)).buildFeed("name3")
+                        verify(factory, times(1)).buildFeed("name4")
                     }
 
                 }
@@ -120,8 +120,8 @@ class TwitterFeedServiceSpec  : Spek({
 
                     it("should return the cached feed for name3 and name4") {
                         assertThat(feed).containsOnly(name3Feed, name4Feed)
-                        verify(factory, times(1)).getFeed("name3")
-                        verify(factory, times(1)).getFeed("name4")
+                        verify(factory, times(1)).buildFeed("name3")
+                        verify(factory, times(1)).buildFeed("name4")
                     }
 
                 }
@@ -131,7 +131,7 @@ class TwitterFeedServiceSpec  : Spek({
 
                     it("should load the feed for name1") {
                         assertThat(feed).containsOnly(name1Feed)
-                        verify(factory, times(2)).getFeed("name1")
+                        verify(factory, times(2)).buildFeed("name1")
                     }
 
                 }
@@ -144,8 +144,8 @@ class TwitterFeedServiceSpec  : Spek({
 
                     it("should return load the feed for name3 and name4") {
                         assertThat(feed).containsOnly(name3Feed2, name4Feed2)
-                        verify(factory, times(2)).getFeed("name3")
-                        verify(factory, times(2)).getFeed("name4")
+                        verify(factory, times(2)).buildFeed("name3")
+                        verify(factory, times(2)).buildFeed("name4")
                     }
                 }
 
@@ -154,7 +154,7 @@ class TwitterFeedServiceSpec  : Spek({
                     service.loadReplies("name5", 1)
 
                     it("should load replies") {
-                        verify(factory, times(1)).getFeed("name5")
+                        verify(factory, times(1)).buildFeed("name5")
                         verify(name5Feed, times(1)).findEntry(1)
                         verify(name5Entry, times(1)).refreshReplies()
                     }
@@ -166,7 +166,7 @@ class TwitterFeedServiceSpec  : Spek({
                     service.loadReplies("name5", 1)
 
                     it("should load replies") {
-                        verify(factory, times(1)).getFeed("name5")
+                        verify(factory, times(1)).buildFeed("name5")
                         verify(name5Feed, times(2)).findEntry(1)
                         verify(name5Entry, times(2)).refreshReplies()
                     }
