@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.OAuth2Token;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -44,16 +47,28 @@ public class FeedController {
 	private TwitterFeedService service;
 	
 	@PostConstruct
-	public void setup() {
+	public void setup() throws TwitterException {
+		
+		Configuration initConfig = new ConfigurationBuilder()
+				.setDebugEnabled(true)
+				.setOAuthConsumerKey(oAuthConsumerKey)
+				.setOAuthConsumerSecret(oAuthConsumerSecret)
+				//.setOAuthAccessToken(oAuthAccessToken)
+				//.setOAuthAccessTokenSecret(oAuthAccessTokenSecret)
+				.setApplicationOnlyAuthEnabled(true)
+				.build();
+		OAuth2Token token = new TwitterFactory(initConfig).getInstance().getOAuth2Token();
+		
 		Configuration config = new ConfigurationBuilder()
 				.setDebugEnabled(true)
 				.setOAuthConsumerKey(oAuthConsumerKey)
 				.setOAuthConsumerSecret(oAuthConsumerSecret)
-				.setOAuthAccessToken(oAuthAccessToken)
-				.setOAuthAccessTokenSecret(oAuthAccessTokenSecret)
+				.setOAuth2TokenType(token.getTokenType())
+				.setOAuth2AccessToken(token.getAccessToken())
+				.setApplicationOnlyAuthEnabled(true)
 				.build();
 		
-		TwitterRepository repo = new TwitterRepository(config);
+		TwitterRepository repo = new TwitterRepository(config, 60 * 10);
 		TwitterFeedFactory factory = new TwitterFeedFactory(repo);
 		
 		TwitterFeedSimpleCacheLoader cacheLoader = new TwitterFeedSimpleCacheLoader(factory);

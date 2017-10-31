@@ -67,6 +67,7 @@ dependencies {
     compile group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.6'
     compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
     compile 'com.google.guava:guava:23.0-android'
+    compile 'io.github.microutils:kotlin-logging:1.4.6'
 
 
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'

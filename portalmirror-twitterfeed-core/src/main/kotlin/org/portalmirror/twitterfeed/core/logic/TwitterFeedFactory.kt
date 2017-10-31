@@ -7,12 +7,12 @@ import org.portalmirror.twitterfeed.core.domain.TwitterFeedEntry
  * Created by arturro on 23/07/17.
  */
 
-val MAX_EAGER_LOADING_FEED_DEPTH : Int = 2
 
-class TwitterFeedFactory(val repository: TwitterRepository) {
+class TwitterFeedFactory(val repository: TwitterRepository, val maxFeedDepth : Int) {
 
     fun buildFeed(screenName: String) : TwitterFeed {
         return TwitterFeed(screenName, repository.getTop20StatusesFromTimeline(screenName)
-                .map { status -> TwitterFeedEntry(screenName, status, repository) })
+                .sortedBy { it.createdAt }
+                .map { status -> TwitterFeedEntry(screenName, status, repository, maxFeedDepth) }.sortedByDescending { it.status.createdAt })
     }
 }

@@ -21,12 +21,11 @@ class TwitterFeedFactorySpec : Spek({
     describe("a TwitterFeedFactory") {
 
         val repository : TwitterRepository = mock(TwitterRepository::class.java)
-        val factory : TwitterFeedFactory =  TwitterFeedFactory(repository)
+        val factory =  TwitterFeedFactory(repository, 2)
 
+        context("TwitterRepositoryMock for 'twitterapi' returns a status hierarchy with depth of 2") {
 
-        context("TwitterRepositoryMock for 'twitterapi' returns a status hierarchy with depth of 3") {
-
-            val screenName : String = "twitterapi"
+            val screenName = "twitterapi"
 
             `when`(repository.getTop20StatusesFromTimeline(screenName)).thenReturn(Arrays.asList(rootStatus1, rootStatus2, rootStatus3))
             `when`(repository.getAllRepliesToStatus(rootStatus1)).thenReturn(Arrays.asList(replyTo_rootStatus1))
@@ -36,7 +35,7 @@ class TwitterFeedFactorySpec : Spek({
             on("buildFeed()") {
                 val feed = factory.buildFeed(screenName)
 
-                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.feedEntries.find { e -> e.status.equals(rootStatus1) }!!.replies
+                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.feedEntries.find { e -> e.status == rootStatus1 }!!.replies
                 val repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_Status1.flatMap { e -> e.replies }
                 val repliesTo_repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_repliesTo_Status1.flatMap { e -> e.replies }
 
@@ -56,7 +55,7 @@ class TwitterFeedFactorySpec : Spek({
             on("buildFeed() and reloading refreshReplies() on level 2 replies") {
                 val feed = factory.buildFeed(screenName)
 
-                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.feedEntries.find { e -> e.status.equals(rootStatus1) }!!.replies
+                val repliesTo_Status1 : List<TwitterFeedEntry> = feed.feedEntries.find { e -> e.status == rootStatus1 }!!.replies
                 val repliesTo_repliesTo_Status1 : List<TwitterFeedEntry> = repliesTo_Status1.flatMap { e -> e.replies }
 
                 repliesTo_repliesTo_Status1.forEach { e -> e.refreshReplies() }
@@ -70,7 +69,6 @@ class TwitterFeedFactorySpec : Spek({
 
         }
     }
-
 
 })
 
