@@ -1,0 +1,24 @@
+{
+  "name": "static",
+  "homepage": "https://github.com/elmozgo/PortalMirror",
+  "authors": [
+    "Artur Karwowski <artur.karwowski@mailplus.pl>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "GPL3",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "hamsterjs": "^1.1.2",
+    "jquery.scrollTo": "^2.1.2",
+    "jquery": "^3.2.1",
+    "moment": "^2.19.1"
+  }
+}
