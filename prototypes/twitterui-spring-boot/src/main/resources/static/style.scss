@@ -1,9 +1,12 @@
 $black: #000000;
-$color_storm_dust_approx: #666;
+$grey: rgb(189, 188, 188);
 $white: #fff;
+$not_active_opacity: 0.3;
+$active_opacity: 1;
+$font_weight_bold: 700;
 body {
     background-color: $black;
-    color: $color_storm_dust_approx;
+    color: $white;
 }
 
 .twittermirror-container {
@@ -20,7 +23,7 @@ body {
         padding: 0;
         width: 100%;
         background-color: $black;
-        overflow: hidden;
+        overflow-x: hidden;
         overflow-y: scroll;
         li {
             display: grid;
@@ -29,25 +32,31 @@ body {
             grid-template-areas: "status-metadata status-header" "status-list-avatar status-text" "status-stats status-text";
             padding: 5px;
             text-decoration: none;
-            transition: color 0.5s ease-in, border-right-color 0.5s ease-in;
+            transition: opacity 0.5s ease-in, border-right-color 0.5s ease-in;
+            opacity: $not_active_opacity;
             border-right-width: 5px;
             border-right-style: solid;
             border-right-color: transparent;
 
             img.status-list-avatar {
-                opacity: 0.5;
-                transition: opacity 0.5s ease-out;
                 border-radius: 100%;
-                max-width: 80px;
-                max-height: 80px;
+                max-width: 48x;
+                max-height: 48px;
                 width: auto;
                 height: auto;
+                grid-area: status-list-avatar;
+            }
+            .status-metadata {
+                
+                .screenname {
+                    display: block;
+                }
+                .name {
+                    display: block;
+                }
             }
             .text {
                 grid-area: status-text;
-            }
-            .status-list-avatar {
-                grid-area: status-list-avatar;
             }
             .status-metadata {
                 grid-area: status-metadata;
@@ -61,13 +70,9 @@ body {
 
             &.active {
                 background-clip: border-box;
-                color: $white;
                 border-right-color: $white;
-                transition: border-right-color 0.5s ease-out, color 0.5s ease-out;
-                img.status-list-avatar {
-                    opacity: 1;
-                    transition: opacity 1s ease-in;
-                }
+                transition: border-right-color 0.5s ease-out, opacity 0.5s ease-out;
+                opacity: $active_opacity;
             }
         }
     }
@@ -75,21 +80,51 @@ body {
         grid-area: status-content;
         margin-left: 16px;
         transition: opacity 1s ease-out;
+        opacity: $not_active_opacity;
+        overflow-x: hidden;
+        overflow-y: hidden;
         .feed-details {
             display: block;
+
+            .status-gif, .status-video, .status-img {
+                max-width: 100%;
+            }
+
         }
         .feed-replies {
             display: block;
         }
+        &.loading-mode {
+            opacity: 0;
+        }
+    }
+
+    &.pressed-mode {
+        ul.status-list {
+            overflow-y: hidden;
+        }
+        .status-content {
+            opacity: $active_opacity;
+            overflow-y: scroll;
+            &.loading-mode {
+                opacity: $not_active_opacity;
+            }
+        }
+    }
+    &.loading-mode {
+        opacity: 0;
     }
 }
 
-.loading-mode {
-    transition: opacity 1s ease-in;
-    opacity: 0;
+.screenname, .reply-screenname {
+    font-weight: $font_weight_bold;
+}
+.retweeted-by, .replied-to {
+    //font-family: "HelveticaNeue-Light";
+    color: $grey;
 }
 
-::-webkit-scrollbar,  {
+::-webkit-scrollbar {
     display: none;
 }
 

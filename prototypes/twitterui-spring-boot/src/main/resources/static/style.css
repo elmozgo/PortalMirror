@@ -1,6 +1,6 @@
 body {
   background-color: #000000;
-  color: #666; }
+  color: #fff; }
 
 .twittermirror-container {
   height: 100%;
@@ -16,7 +16,7 @@ body {
     padding: 0;
     width: 100%;
     background-color: #000000;
-    overflow: hidden;
+    overflow-x: hidden;
     overflow-y: scroll; }
     .twittermirror-container ul.status-list li {
       display: grid;
@@ -25,22 +25,24 @@ body {
       grid-template-areas: "status-metadata status-header" "status-list-avatar status-text" "status-stats status-text";
       padding: 5px;
       text-decoration: none;
-      transition: color 0.5s ease-in, border-right-color 0.5s ease-in;
+      transition: opacity 0.5s ease-in, border-right-color 0.5s ease-in;
+      opacity: 0.3;
       border-right-width: 5px;
       border-right-style: solid;
       border-right-color: transparent; }
       .twittermirror-container ul.status-list li img.status-list-avatar {
-        opacity: 0.5;
-        transition: opacity 0.5s ease-out;
         border-radius: 100%;
-        max-width: 80px;
-        max-height: 80px;
+        max-width: 48x;
+        max-height: 48px;
         width: auto;
-        height: auto; }
+        height: auto;
+        grid-area: status-list-avatar; }
+      .twittermirror-container ul.status-list li .status-metadata .screenname {
+        display: block; }
+      .twittermirror-container ul.status-list li .status-metadata .name {
+        display: block; }
       .twittermirror-container ul.status-list li .text {
         grid-area: status-text; }
-      .twittermirror-container ul.status-list li .status-list-avatar {
-        grid-area: status-list-avatar; }
       .twittermirror-container ul.status-list li .status-metadata {
         grid-area: status-metadata; }
       .twittermirror-container ul.status-list li .status-header {
@@ -49,24 +51,39 @@ body {
         grid-area: status-stats; }
       .twittermirror-container ul.status-list li.active {
         background-clip: border-box;
-        color: #fff;
         border-right-color: #fff;
-        transition: border-right-color 0.5s ease-out, color 0.5s ease-out; }
-        .twittermirror-container ul.status-list li.active img.status-list-avatar {
-          opacity: 1;
-          transition: opacity 1s ease-in; }
+        transition: border-right-color 0.5s ease-out, opacity 0.5s ease-out;
+        opacity: 1; }
   .twittermirror-container .status-content {
     grid-area: status-content;
     margin-left: 16px;
-    transition: opacity 1s ease-out; }
+    transition: opacity 1s ease-out;
+    opacity: 0.3;
+    overflow-x: hidden;
+    overflow-y: hidden; }
     .twittermirror-container .status-content .feed-details {
       display: block; }
+      .twittermirror-container .status-content .feed-details .status-gif, .twittermirror-container .status-content .feed-details .status-video, .twittermirror-container .status-content .feed-details .status-img {
+        max-width: 100%; }
     .twittermirror-container .status-content .feed-replies {
       display: block; }
+    .twittermirror-container .status-content.loading-mode {
+      opacity: 0; }
+  .twittermirror-container.pressed-mode ul.status-list {
+    overflow-y: hidden; }
+  .twittermirror-container.pressed-mode .status-content {
+    opacity: 1;
+    overflow-y: scroll; }
+    .twittermirror-container.pressed-mode .status-content.loading-mode {
+      opacity: 0.3; }
+  .twittermirror-container.loading-mode {
+    opacity: 0; }
 
-.loading-mode {
-  transition: opacity 1s ease-in;
-  opacity: 0; }
+.screenname, .reply-screenname {
+  font-weight: 700; }
+
+.retweeted-by, .replied-to {
+  color: #bdbcbc; }
 
 ::-webkit-scrollbar {
   display: none; }

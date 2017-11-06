@@ -69,11 +69,11 @@ public class FeedController {
 				.build();
 		
 		TwitterRepository repo = new TwitterRepository(config, 60 * 10);
-		TwitterFeedFactory factory = new TwitterFeedFactory(repo);
+		TwitterFeedFactory factory = new TwitterFeedFactory(repo, 1);
 		
 		TwitterFeedSimpleCacheLoader cacheLoader = new TwitterFeedSimpleCacheLoader(factory);
 		
-        LoadingCache<String, TwitterFeed> cache = CacheBuilder.newBuilder().maximumSize(3).expireAfterWrite(1, TimeUnit.MINUTES).build(cacheLoader);
+        LoadingCache<String, TwitterFeed> cache = CacheBuilder.newBuilder().maximumSize(3).expireAfterWrite(30, TimeUnit.MINUTES).build(cacheLoader);
 
 		
 		service = new TwitterFeedService(cache);

@@ -33,6 +33,7 @@ function formatCreatedAtDate (createdAtMilis) {
 let statusRepliesTemplate = function (reply) { return `
     
     <li>
+        <img class="reply-list-avatar" src="${reply.status.user.profileImageURL}"/>
         <span class="reply-screenname">@${reply.status.user.screenName}</span>
         <span class="reply-name">${reply.status.user.name}</span>
         <span class="reply-text">${reply.status.text}</span>
@@ -108,13 +109,14 @@ let menuItemTemplate = function(entry) { return `
 
         </div>
         <div class="status-header">
+            <span class="tweeted-on-date">${formatCreatedAtDate(entry.status.createdAt)}</span>
+            
             ${entry.status.inReplyToStatusId > -1 ? `
-                <span class="replied-to">in reply to: @${entry.status.inReplyToScreenName}</span>
+                <span class="replied-to">in reply to: <span class="screenname">@${entry.status.inReplyToScreenName}</span></span>
             ` : ``}
             ${entry.status.retweeted === true ? `
-                <span class="retweeted-by">retweeted by: @${entry.screenName}</span>
+                <span class="retweeted-by">retweeted by: <span class="screenname">@${entry.screenName}</span></span>
             ` : ``}
-            <span class="tweeted-on-date">${formatCreatedAtDate(entry.status.createdAt)}</span>
         </div>
         <span class="text">${entry.status.text}</span>
     </li>
@@ -190,7 +192,7 @@ PortalMirrorTwitterFeedUi.prototype = {
         });
     },
 
-    initOnUiEvent: function () {
+    listenToActiveChanges: function () {
 
         let self = this;
         let statusList = this.statusList;
@@ -203,15 +205,6 @@ PortalMirrorTwitterFeedUi.prototype = {
             if (setToActiveMutation) {
                 self.onActiveChange(setToActiveMutation.target);
             }
-
-            let setToPressedMutation = mutations.filter(
-                (mutation) =>
-                    mutation.target.classList.contains('pressed')
-            ).pop();
-            if (setToPressedMutation) {
-                self.onPressedChange(setToPressedMutation.target);
-            }
-
         });
 
         observer.observe(statusList, {
@@ -250,16 +243,38 @@ PortalMirrorTwitterFeedUi.prototype = {
                 self.containerElement.classList.toggle('pressed-mode');
                 active.classList.toggle('pressed');
 
+                if(active.classList.contains('pressed')) {
+                    self.onPressed(active);
+                } else {
+                    self.onUnpressed(active);
+                }
+
+
             }
         };
         document.onauxclick = document.onclick; //for chrome
     },
 
-    onPressedChange: function (pressedElement) {
+    onPressed: function (pressedElement) {
         let activeStatusId = pressedElement.getAttribute('data-pmtf-statusid');
 
-        this.feedReplies.innerHTML = 
-            pressedElement.getAttribute('data-pmtf-statusid') + " is pressed.";
+        let activeEntry = this.feedJsonArray.filter(entry => entry.status.id == activeStatusId)[0];
+        if(activeEntry && hasMediaType(activeEntry, 'video')) {
+            readyOnce('.status-video', function(){
+                this.play();
+            });
+        }
+        
+    },
+
+    onUnpressed: function (pressedElement) {
+        let activeStatusId = pressedElement.getAttribute('data-pmtf-statusid');
+
+        let activeEntry = this.feedJsonArray.filter(entry => entry.status.id == activeStatusId)[0];
+        if(activeEntry && hasMediaType(activeEntry, 'video')) {
+            document.querySelectorAll('.status-video')[0].pause();
+        }
+        
     },
 
     loadContent: function () {
@@ -285,19 +300,15 @@ PortalMirrorTwitterFeedUi.prototype = {
             
             this.setupWheelHandling();
             this.setupButtonPressedHandling();
-            this.initOnUiEvent();
+            this.listenToActiveChanges();
             this.statusList.children[0].classList.add('active');
             this.containerElement.classList.remove('loading-mode');
         });
-
-        
-
-        
-
     }
-
 };
 
+
+//js util functions to be placed in the hook :
 
 
 //https://github.com/googlesamples/web-fundamental
@@ -339,3 +350,58 @@ function get(url) {
     return get(url).then(JSON.parse);
   }
   
+
+//on document ready with MutationObserver (http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/)
+//with some small changes by me:
+// - function get called only once
+
+
+(function(win) {
+    'use strict';
+    
+    var listeners = [], 
+    doc = win.document, 
+    MutationObserver = win.MutationObserver || win.WebKitMutationObserver,
+    observer;
+
+    function readyOnce(selector, fn) {
+        // Store the selector and callback to be monitored
+        listeners.push({
+            selector: selector,
+            fn: fn,
+            fnCalled: false
+        });
+        if (!observer) {
+            // Watch for changes in the document
+            observer = new MutationObserver(checkOnce);
+            observer.observe(doc.documentElement, {
+                childList: true,
+                subtree: true
+            });
+        }
+        // Check if the element is currently in the DOM
+        checkOnce();
+    }
+        
+    function checkOnce() {
+        // Check the DOM for elements matching a stored selector
+        for (var i = 0, len = listeners.length, listener, element; i < len; i++) {
+            listener = listeners[i];
+            if(listener.fnCalled === false) {
+                // Query for elements matching the specified selector
+                element = doc.querySelectorAll(listener.selector)[0];
+                if(element) {
+                    listener.fn.call(element, element);
+                    listener.fnCalled = true;
+                }
+            }
+        }
+
+        listeners = listeners.filter(l => l.fnCalled === false); // clearing listeners with invoked functions 
+
+    }
+
+    // Expose `ready`
+    win.readyOnce = readyOnce;
+            
+})(this);

@@ -17,7 +17,7 @@ public class Fixtures {
 		TwitterRepository repo = mock(TwitterRepository.class);
         when(repo.getAllRepliesToStatus(StatusesKt.getRootStatus1())).thenReturn(Arrays.asList(StatusesKt.getReplyTo_rootStatus1()));
         when(repo.getAllRepliesToStatus(StatusesKt.getReplyTo_rootStatus1())).thenReturn(Arrays.asList(StatusesKt.getReplyTo_replyTo_rootStatus1()));
-        TwitterFeedEntry root = new TwitterFeedEntry("root", StatusesKt.getRootStatus1(), repo);
+        TwitterFeedEntry root = new TwitterFeedEntry("root", StatusesKt.getRootStatus1(), repo, 3);
         TwitterFeed feed = new TwitterFeed("root", Arrays.asList(root));
         
         return feed;

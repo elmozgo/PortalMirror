@@ -46,12 +46,14 @@ class TwitterRepository(configuration: Configuration, cacheTimeout : Long) {
 
         var maxId = Long.MAX_VALUE
 
-        repeat(10) repliesScrolling@ {
+        for(i in 1..10)  {
             query.maxId = maxId
-            logger.debug { "calling twitter.search(query) : q:${query.query}" }
+            logger.debug { "calling twitter.search(query) : q=[${query.query}] maxId=[$maxId] " }
             val tweets = twitter.search(query).tweets
+            logger.debug { "received ${tweets.size} tweets" }
+
             if(tweets.isEmpty()) {
-                return@repliesScrolling
+                break
             }
             globalRepliesToUser.addAll(tweets)
             maxId = tweets.minBy({ it.id })!!.id
