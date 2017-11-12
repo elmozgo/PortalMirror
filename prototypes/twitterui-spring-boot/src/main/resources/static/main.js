@@ -35,7 +35,7 @@ let statusRepliesTemplate = function (reply) { return `
     <li>
         <img class="reply-list-avatar" src="${reply.status.user.profileImageURL}"/>
         <span class="reply-screenname">@${reply.status.user.screenName}</span>
-        <span class="reply-name">${reply.status.user.name}</span>
+        <span class="reply-name">${reply.status.user.name}</span>:
         <span class="reply-text">${reply.status.text}</span>
         ${reply.replies.length > 0 ? `
             <ol>
@@ -85,6 +85,14 @@ let statusContentTemplate = function(entry) { return `
     </div>
 `;};
 
+let icon = function(iconName) { return `
+    <svg class="icon">
+        <use xlink:href="font/open-iconic/sprite/open-iconic-sprite.svg#${iconName}"
+            class="${iconName}">
+        </use>
+    </svg>
+`;};
+
 let menuItemTemplate = function(entry) { return `
     <li data-pmtf-statusid="${entry.status.id}" data-pmtf-screenname="${entry.screenName}" >
         <img class="status-list-avatar" src="${entry.status.user.profileImageURL}"/>
@@ -92,19 +100,34 @@ let menuItemTemplate = function(entry) { return `
             <span class="screenname">@${entry.status.user.screenName}</span>
             <span class="name">${entry.status.user.name}</span>
         </div>
-        <div class-"status-stats">
-            <span class="retweeted">${entry.status.retweetCount}</span>
-            <span class="liked">${entry.status.favoriteCount}</span>
-            <span class="replied">${entry.replies.length}+</span>
+        <div class="status-stats">
+            <div class="retweeted">
+                ${icon('loop-circular')}
+                <span>${entry.status.retweetCount}</span>
+            </div>
+            <div class="liked">
+                ${icon('heart')}
+                <span>${entry.status.favoriteCount}</span>
+            </div>
+            <div class="replied">
+                ${icon('chat')}
+                <span>${entry.replies.length}+</span>
+            </div>
             
             ${hasMediaType(entry, 'photo') ? `
-                <span class="photo">p</span>
+                <div class="photo">
+                    ${icon('image')}
+                </div>
             ` : ``}
             ${hasMediaType(entry, 'animated_gif') ? `
-                <span class="animated-gif">g</span>
+                <div class="animated-gif">
+                    ${icon('video')}
+                </div>
             ` : ``}
             ${hasMediaType(entry, 'video') ? `
-                <span class="video">v</span>
+                <div class="video">
+                    ${icon('video')}
+                </div>
             ` : ``}
 
         </div>

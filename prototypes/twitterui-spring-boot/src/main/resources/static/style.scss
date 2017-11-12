@@ -16,6 +16,11 @@ body {
     grid-template-rows: 50px auto 50px;
     grid-template-areas: "header status-content" "status-list status-content" "footer status-content";
     transition: opacity 1s ease-out;
+    
+    .twitter-logo {
+        grid-area: header;
+    }
+
     ul.status-list {
         grid-area: status-list;
         list-style-type: none;
@@ -66,6 +71,11 @@ body {
             }
             .status-stats {
                 grid-area: status-stats;
+                width: 100%;
+                > div {
+                    display: inline-block;
+                    width: 60px;
+                }
             }
 
             &.active {
@@ -93,6 +103,21 @@ body {
         }
         .feed-replies {
             display: block;
+            ol {
+                padding-left: 10px;
+                list-style: none;
+                li {
+                    padding-left: 5px;
+                    .reply-text {
+                        display: block;
+                        padding-left: 50px;
+                    }
+                    .reply-list-avatar{
+                        max-height: 30px;
+                        max-width: 30px;
+                    }
+                }
+            }
         }
         &.loading-mode {
             opacity: 0;
@@ -128,3 +153,10 @@ body {
     display: none;
 }
 
+.icon {
+    display: inline-block;
+    fill: $white;
+    width: 16px;
+    height: 16px;
+  }
+  

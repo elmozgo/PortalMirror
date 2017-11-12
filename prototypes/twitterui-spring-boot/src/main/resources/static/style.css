@@ -9,6 +9,8 @@ body {
   grid-template-rows: 50px auto 50px;
   grid-template-areas: "header status-content" "status-list status-content" "footer status-content";
   transition: opacity 1s ease-out; }
+  .twittermirror-container .twitter-logo {
+    grid-area: header; }
   .twittermirror-container ul.status-list {
     grid-area: status-list;
     list-style-type: none;
@@ -48,7 +50,11 @@ body {
       .twittermirror-container ul.status-list li .status-header {
         grid-area: status-header; }
       .twittermirror-container ul.status-list li .status-stats {
-        grid-area: status-stats; }
+        grid-area: status-stats;
+        width: 100%; }
+        .twittermirror-container ul.status-list li .status-stats > div {
+          display: inline-block;
+          width: 60px; }
       .twittermirror-container ul.status-list li.active {
         background-clip: border-box;
         border-right-color: #fff;
@@ -67,6 +73,17 @@ body {
         max-width: 100%; }
     .twittermirror-container .status-content .feed-replies {
       display: block; }
+      .twittermirror-container .status-content .feed-replies ol {
+        padding-left: 10px;
+        list-style: none; }
+        .twittermirror-container .status-content .feed-replies ol li {
+          padding-left: 5px; }
+          .twittermirror-container .status-content .feed-replies ol li .reply-text {
+            display: block;
+            padding-left: 50px; }
+          .twittermirror-container .status-content .feed-replies ol li .reply-list-avatar {
+            max-height: 30px;
+            max-width: 30px; }
     .twittermirror-container .status-content.loading-mode {
       opacity: 0; }
   .twittermirror-container.pressed-mode ul.status-list {
@@ -87,3 +104,9 @@ body {
 
 ::-webkit-scrollbar {
   display: none; }
+
+.icon {
+  display: inline-block;
+  fill: #fff;
+  width: 16px;
+  height: 16px; }
