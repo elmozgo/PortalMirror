@@ -157,11 +157,24 @@ function PortalMirrorTwitterFeedUi(containerElement, feedUrl) {
 
 PortalMirrorTwitterFeedUi.prototype = {
 
-    scrollToActive: function (newActive) {
+    scrollToActive: function (newActive, direction) {
         newActive.classList.add('active');
 
-       //if(newActive.INDEX > MAX_HEIGHT / ITEM_HEIGHT)
-        jQuery(this.statusList).scrollTo(newActive, 500, {over:0});
+        if( newActive.getBoundingClientRect().top > this.statusListTop &&
+            newActive.getBoundingClientRect().top < this.statusListBottom &&
+            newActive.getBoundingClientRect().bottom > this.statusListTop &&
+            newActive.getBoundingClientRect().bottom < this.statusListBottom) {
+                return; //already visible - do nothing
+            }
+        if(direction === 'down') {
+            //this works but is too fast
+            //TODO: implement it with scrollTop +- hidden distance or find a library for that
+            newActive.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+        } else {
+            newActive.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+            //jQuery(this.statusList).scrollTo(newActive, 500, {over:0});
+        }
+        
     },
 
     menuItemDown: function () {
@@ -170,7 +183,7 @@ PortalMirrorTwitterFeedUi.prototype = {
         if (oldActive.nextElementSibling) {
             oldActive.classList.remove('active');
             var newActive = oldActive.nextElementSibling;
-            this.scrollToActive(newActive);
+            this.scrollToActive(newActive, 'down');
         } else {
             //actionOnLastElement();
         }
@@ -183,7 +196,7 @@ PortalMirrorTwitterFeedUi.prototype = {
         if (oldActive.previousElementSibling) {
             oldActive.classList.remove('active');
             var newActive = oldActive.previousElementSibling;
-            this.scrollToActive(newActive);
+            this.scrollToActive(newActive, 'up');
         } else {
             //actionOnFirstElement();
         }
@@ -325,6 +338,8 @@ PortalMirrorTwitterFeedUi.prototype = {
             this.setupButtonPressedHandling();
             this.listenToActiveChanges();
             this.statusList.children[0].classList.add('active');
+            this.statusListTop = this.statusList.getBoundingClientRect().top;
+            this.statusListBottom = this.statusList.getBoundingClientRect().bottom;
             this.containerElement.classList.remove('loading-mode');
         });
     }
@@ -372,12 +387,10 @@ function get(url) {
   function getJson(url) {
     return get(url).then(JSON.parse);
   }
-  
 
 //on document ready with MutationObserver (http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/)
 //with some small changes by me:
 // - function get called only once
-
 
 (function(win) {
     'use strict';
