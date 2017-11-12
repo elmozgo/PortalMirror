@@ -51,7 +51,8 @@ body {
         grid-area: status-header; }
       .twittermirror-container ul.status-list li .status-stats {
         grid-area: status-stats;
-        width: 100%; }
+        width: 100%;
+        margin-top: 5px; }
         .twittermirror-container ul.status-list li .status-stats > div {
           display: inline-block;
           width: 60px; }
@@ -69,6 +70,8 @@ body {
     overflow-y: hidden; }
     .twittermirror-container .status-content .feed-details {
       display: block; }
+      .twittermirror-container .status-content .feed-details .text {
+        font-size: 2em; }
       .twittermirror-container .status-content .feed-details .status-gif, .twittermirror-container .status-content .feed-details .status-video, .twittermirror-container .status-content .feed-details .status-img {
         max-width: 100%; }
     .twittermirror-container .status-content .feed-replies {
@@ -77,7 +80,11 @@ body {
         padding-left: 10px;
         list-style: none; }
         .twittermirror-container .status-content .feed-replies ol li {
-          padding-left: 5px; }
+          padding-left: 10px;
+          padding-bottom: 10px;
+          border-left-width: 1px;
+          border-left-color: #fff;
+          border-left-style: solid; }
           .twittermirror-container .status-content .feed-replies ol li .reply-text {
             display: block;
             padding-left: 50px; }

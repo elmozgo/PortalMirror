@@ -72,6 +72,7 @@ body {
             .status-stats {
                 grid-area: status-stats;
                 width: 100%;
+                margin-top: 5px;
                 > div {
                     display: inline-block;
                     width: 60px;
@@ -96,6 +97,10 @@ body {
         .feed-details {
             display: block;
 
+            .text {
+                font-size: 2em;
+            }
+
             .status-gif, .status-video, .status-img {
                 max-width: 100%;
             }
@@ -107,7 +112,11 @@ body {
                 padding-left: 10px;
                 list-style: none;
                 li {
-                    padding-left: 5px;
+                    padding-left: 10px;
+                    padding-bottom: 10px;
+                    border-left-width: 1px;
+                    border-left-color: $white;
+                    border-left-style: solid;
                     .reply-text {
                         display: block;
                         padding-left: 50px;
