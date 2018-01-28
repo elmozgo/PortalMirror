@@ -20,7 +20,15 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.util.EntityUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+@Ignore
+
+/**
+ * Liferay has to be running during execution of this test.
+ *
+ */
 
 public class AjaxCsrfInterceptorTest {
 

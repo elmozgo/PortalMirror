@@ -3,22 +3,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.portalmirror</groupId>
+    	<artifactId>parent</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	
 	<groupId>org.portalmirror</groupId>
 	<artifactId>portalmirror-jwt-portlet</artifactId>
 	<packaging>war</packaging>
-	<name>portalmirror-jwt-portlet Portlet</name>
+	<name>portalmirror-jwt-portlet</name>
 	<version>1.0-SNAPSHOT</version>
-	<properties>
-		<liferay.maven.plugin.version>6.2.2</liferay.maven.plugin.version>
-		<liferay.root>/home/arturro/lustro/liferay-portal-6.2-ce-ga6</liferay.root>
-		<liferay.auto.deploy.dir>${liferay.root}/deploy/</liferay.auto.deploy.dir>
-		<liferay.app.server.deploy.dir>${liferay.root}/tomcat-7.0.42/webapps/</liferay.app.server.deploy.dir>
-		<liferay.app.server.lib.global.dir>${liferay.root}/tomcat-7.0.42/webapps/ROOT/</liferay.app.server.lib.global.dir>
-		<liferay.version>6.2.5</liferay.version>
-		<org.springframework-version>4.2.4.RELEASE</org.springframework-version>
-		<org.freemarker-version>2.3.23</org.freemarker-version>
-		<build.profile>elmozgo</build.profile>
-	</properties>
 	<build>
 		<plugins>
 			<plugin>
