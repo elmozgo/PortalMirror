@@ -12,10 +12,12 @@
     "chai": "~3.5.0",
     "express": "~4.14.0",
     "jsonwebtoken": "^7.1.9",
+    "properties-reader": "0.0.16",
     "socket.io": "^1.5.1",
     "socketio-jwt": "^4.5.0",
     "socketio-jwt-auth": "0.0.5",
-    "websocket": "~1.0.23"
+    "websocket": "~1.0.23",
+    "yargs": "^11.0.0"
   },
   "devDependencies": {
     "mocha": "~3.1.2"

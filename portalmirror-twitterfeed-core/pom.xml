@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<project 
+    xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.portalmirror</groupId>
+        <artifactId>parent</artifactId>
+        <version>0.0.1</version>
+    </parent>
+    <groupId>org.portalmirror.twitterfeed.core</groupId>
+    <artifactId>portalmirror-twitterfeed-core</artifactId>
+    <name>portalmirror-twitterfeed-core</name>
+    <version>0.0.1</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.fortasoft</groupId>
+                <artifactId>gradle-maven-plugin</artifactId>
+                <version>1.0.8</version>
+                <configuration>
+                    <tasks>
+                        <task>test</task>
+                        <task>publishToMavenLocal</task>
+                    </tasks>
+                    <gradleProjectDirectory>${project.basedir}</gradleProjectDirectory>
+                    <gradleVersion>3.5</gradleVersion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!-- before compile -->
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>invoke</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,11 +1,11 @@
 /*jslint node:true */
 'use strict';
 
-var argv = require('yarg').argv;
+var argv = require('yargs').argv;
 var PropertiesReader = require('properties-reader');
 var properties;
 
-if (argv) {
+if (argv.environment) {
     properties = PropertiesReader('./' + argv.environment + '.properties');
 } else {
     properties = PropertiesReader('./dev.properties');

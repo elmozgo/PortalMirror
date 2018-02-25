@@ -1,18 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project 
+    xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
     <version>0.0.1</version>
-
     <groupId>org.portalmirror</groupId>
     <artifactId>parent</artifactId>
     <name>portalmirror-parent</name>
-
     <packaging>pom</packaging>
-
     <modules>
         <!--dependencies: -->
         <module>portalmirror-websocket-core</module>
-        
+        <module>portalmirror-twitterfeed-core</module>
         <!--Liferay plugin projects:  -->
         <module>portalmirror-jwt-portlet</module>
         <module>portalmirror-refresher-portlet</module>
@@ -22,41 +20,34 @@
         <module>portalmirror-basic-theme</module>
     </modules>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.fortasoft</groupId>
-                <artifactId>gradle-maven-plugin</artifactId>
-                <version>1.0.8</version>
-                <configuration>
-                    <tasks>
-                        <task>test</task>
-                        <task>publishToMavenLocal</task>
-                    </tasks>
-
-                    <gradleProjectDirectory>${project.basedir}/portalmirror-twitterfeed-core</gradleProjectDirectory>
-
-                </configuration>
-                <executions>
-                    <execution>
-                        <!-- before compile -->
-                        <phase>validate</phase>
-
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>    
-
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.liferay.maven.plugins</groupId>
+                    <artifactId>liferay-maven-plugin</artifactId>
+                    <version>${liferay.maven.plugin.version}</version>
+                    <configuration>
+                        <skip>true</skip>
+                        <autoDeployDir>${liferay.auto.deploy.dir}</autoDeployDir>
+                        <appServerDeployDir>${liferay.app.server.deploy.dir}</appServerDeployDir>
+                        <appServerLibGlobalDir>${liferay.app.server.lib.global.dir}</appServerLibGlobalDir>
+                        <appServerPortalDir>${liferay.app.server.portal.dir}</appServerPortalDir>
+                        <liferayVersion>${liferay.version}</liferayVersion>
+                        <pluginType>portlet</pluginType>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
     <properties>
         <liferay.maven.plugin.version>6.2.2</liferay.maven.plugin.version>
-        <liferay.root>/home/arturro/lustro/liferay-portal-6.2-ce-ga6</liferay.root>
-        <liferay.auto.deploy.dir>${liferay.root}/deploy/</liferay.auto.deploy.dir>
-        <liferay.app.server.deploy.dir>${liferay.root}/tomcat-7.0.42/webapps/</liferay.app.server.deploy.dir>
-        <liferay.app.server.lib.global.dir>${liferay.root}/tomcat-7.0.42/webapps/ROOT/</liferay.app.server.lib.global.dir>
+        <liferay.root>/opt/liferay/liferay-portal-6.2-ce-ga6</liferay.root>
+        <liferay.auto.deploy.dir>${project.parent.basedir}/environment/portalmirror-dev-vagrant/liferay-deploy</liferay.auto.deploy.dir>
+        <liferay.app.server.deploy.dir>${liferay.root}/tomcat-7.0.62/webapps/</liferay.app.server.deploy.dir>
+        <liferay.app.server.lib.global.dir>${liferay.root}/tomcat-7.0.62/webapps/ROOT/</liferay.app.server.lib.global.dir>
         <liferay.version>6.2.5</liferay.version>
         <org.springframework-version>4.2.4.RELEASE</org.springframework-version>
         <org.freemarker-version>2.3.23</org.freemarker-version>
         <build.profile>elmozgo</build.profile>
-	</properties>
-
+    </properties>
 </project>
