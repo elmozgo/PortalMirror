@@ -1,0 +1,32 @@
+---
+# tasks file for notification-service
+
+
+- name: Create system group for the notification-service
+  group:
+    state=present
+    system=yes
+    name={{notification_service_group}}
+
+- name: Create system user for the notification-service
+  user:
+    state=present
+    system=yes
+    name={{notification_service_user}}
+    group={{notification_service_group}}
+    shell=/bin/bash
+
+- name: Install pm2
+  npm: name=pm2 global=yes production=yes
+
+- name: Running NPM install
+  npm: path={{ notification_service_app_path }}
+  register: npm_finished
+  when: notification_service_autostart == true
+
+- name: Start APP
+  become_user: "{{notification_service_user}}"
+  command: pm2 start {{ notification_service_main_js }} --name notification-servicechdir={{ notification_service_app_path }}
+  when:
+    - npm_finished.changed
+    - notification_service_autostart == true

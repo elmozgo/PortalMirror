@@ -1,0 +1,11 @@
+---
+
+# Tests for apache role
+
+- hosts: localhost
+  remote_user: root
+  roles:
+    - ansible-role-apache
+  post_tasks:
+    - include: ./common_tests.yml
+

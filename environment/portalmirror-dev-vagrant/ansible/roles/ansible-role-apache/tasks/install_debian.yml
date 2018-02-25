@@ -1,0 +1,22 @@
+---
+
+- name : install apache packages
+  become : True
+  apt  :
+    name  : "{{ item }}"
+    state : "{{ apache_package_state }}"
+    update_cache     : True
+    cache_valid_time : 3600
+  with_items : "{{ apache_packages }}"
+  notify :
+    - restart apache
+
+- name : stop service on precise before config change
+  become: True
+  service :
+    name : "{{ apache_service_name }}"
+    state : stopped
+  notify :
+    - restart apache
+  when : ansible_distribution_release == 'precise'
+

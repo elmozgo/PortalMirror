@@ -1,0 +1,58 @@
+---
+
+# Tasks file for apache
+
+- name: Load the OS specific varibles
+  include_vars: "{{ role_path }}/vars/{{ ansible_os_family }}.yml"
+  tags:
+    - install
+    - apache
+
+- include: install_debian.yml
+  tags:
+    - install
+    - apache
+  when: ansible_os_family == "Debian"
+
+- name : create data directory
+  become : True
+  file :
+    path  : "{{ apache_datadir }}"
+    group : www-data
+    owner : www-data
+    state : directory
+    mode  : 0750
+  tags:
+    - config
+    - apache
+
+
+- name : create SSL directory
+  become : True
+  file :
+    path  : "{{ apache_ssldir }}"
+    group : www-data
+    owner : www-data
+    state : directory
+    mode  : 0500
+  tags:
+    - config
+    - apache
+
+- include: configure_apache_debian.yml
+  tags:
+    - config
+    - apache
+  when: ansible_os_family == "Debian"
+
+- include: configure_ssl_debian.yml
+  tags:
+    - config
+    - apache
+  when: ansible_os_family == "Debian"  
+
+- include: configure_sites_debian.yml
+  tags:
+    - config
+    - apache
+  when: ansible_os_family == "Debian"  

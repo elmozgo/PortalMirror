@@ -1,0 +1,15 @@
+---
+# Predefined variables for the download and installation of the Liferay 6.2.0 Community Edition
+
+# The base URL for the download of the Tomcat bundle
+liferay_download_base_url: https://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6
+
+# The file name and checksum of the Tomcat bundle archive
+liferay_bundle_archive: liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip
+liferay_bundle_archive_shasum: 0b98f74fd8db0d14e78bfd7930a1a9005de69a25
+
+# The name of the base directory in the Tomcat bundle archive
+liferay_bundle_base_dir_name: liferay-portal-6.2-ce-ga6
+
+# The version of the Tomcat that is bundled in the current Liferay Portal server installation
+liferay_bundle_tomcat_version: 7.0.62

@@ -1,0 +1,93 @@
+---
+
+- name : copy SSL key if exists
+  become : True
+  copy :
+    src   : "{{ inventory_dir }}/files/{{ item.1.key_file }}"
+    dest  : "{{ apache_ssldir }}/{{ item.1.key_file | basename }}"
+    owner : www-data
+    group : www-data
+    mode  : u=r
+  notify : restart apache
+  with_subelements :
+    - "{{ apache_vhosts }}"
+    - virtual_hosts
+  when : apache_vhosts != false and item.1.has_ssl == true and item.1.ssl_selfsigned == false
+
+
+- name : copy SSL cert if exists
+  become : True
+  copy :
+    src   : "{{ inventory_dir }}/files/{{ item.1.cert_file }}"
+    dest  : "{{ apache_ssldir }}/{{ item.1.cert_file | basename }}"
+    owner : www-data
+    group : www-data
+    mode  : u=r
+  notify : restart apache
+  with_subelements :
+    - "{{ apache_vhosts }}"
+    - virtual_hosts
+  when : apache_vhosts != false and item.1.has_ssl == true and item.1.ssl_selfsigned == false
+
+- name : copy SSL chain if exists
+  become : True
+  copy :
+    src   : "{{ inventory_dir }}/files/{{ item.1.chain_file }}"
+    dest  : "{{ apache_ssldir }}/{{ item.1.chain_file | basename }}"
+    owner : www-data
+    group : www-data
+    mode  : u=r
+  notify : restart apache
+  with_subelements :
+    - "{{ apache_vhosts }}"
+    - virtual_hosts
+  when : apache_vhosts != false and item.1.has_ssl == true and item.1.ssl_selfsigned == false
+
+
+
+- name : copy selfsigned SSL key if exists
+  become : True
+  copy :
+    src   : "{{ selfsigned_ssl_location }}/{{ item.1.key_file }}"
+    remote_src: yes
+    dest  : "{{ apache_ssldir }}/{{ item.1.key_file | basename }}"
+    owner : www-data
+    group : www-data
+    mode  : u=r
+  notify : restart apache
+  with_subelements :
+    - "{{ apache_vhosts }}"
+    - virtual_hosts
+  when : apache_vhosts != false and item.1.has_ssl == true and item.1.ssl_selfsigned == true
+
+
+- name : copy selfsigned SSL cert if exists
+  become : True
+  copy :
+    src   : "{{ selfsigned_ssl_location }}/{{ item.1.cert_file }}"
+    remote_src: yes
+    dest  : "{{ apache_ssldir }}/{{ item.1.cert_file | basename }}"
+    owner : www-data
+    group : www-data
+    mode  : u=r
+  notify : restart apache
+  with_subelements :
+    - "{{ apache_vhosts }}"
+    - virtual_hosts
+  when : apache_vhosts != false and item.1.has_ssl == true and item.1.ssl_selfsigned == true
+
+# - name : copy selfsigned SSL chain if exists
+#   become : True
+#   copy :
+#     src   : "{{ selfsigned_ssl_location }}/{{ item.1.chain_file }}"
+#     dest  : "{{ apache_ssldir }}/{{ item.1.chain_file | basename }}"
+#     owner : www-data
+#     group : www-data
+#     mode  : u=r
+#   notify : restart apache
+#   with_subelements :
+#     - apache_vhosts
+#     - virtual_hosts
+#   when : apache_vhosts != false and item.1.has_ssl == true and item.1.ssl_selfsigned == false
+
+

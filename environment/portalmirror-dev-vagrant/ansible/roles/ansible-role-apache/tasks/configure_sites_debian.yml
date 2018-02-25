@@ -1,0 +1,31 @@
+---
+
+- name  : disable apache sites
+  become : True
+  shell :
+    "a2dissite {{ item }}"
+  register     : apache_dissite
+  changed_when : apache_dissite.stdout.endswith(' already disabled') == false
+  notify       : restart apache
+  with_items   : "{{ apache_sites_disabled }}"
+
+
+- name  : enable apache sites
+  become : True
+  shell :
+    "a2ensite {{ item }}"
+  register     : apache_ensite
+  changed_when : apache_ensite.stdout.endswith(' already enabled') == false
+  notify       : restart apache
+  with_items   : "{{ apache_sites_enabled }}"
+
+
+- name : generate logrotate
+  become : True
+  template :
+    src   : "{{ role_path }}/templates/logrotate.j2"
+    dest  : "/etc/logrotate.d/apache2"
+    owner : root
+    group : root
+    mode  : 0644
+

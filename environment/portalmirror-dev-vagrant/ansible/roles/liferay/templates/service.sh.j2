@@ -1,0 +1,25 @@
+#!/bin/sh
+
+description "Tomcat servlet container"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+respawn
+respawn limit 10 5
+
+setuid {{ liferay_service_user }}
+setgid {{ liferay_service_group }}
+
+env CATALINA_HOME={{ liferay_tomcat_dir }}
+env CATALINA_BASE={{ liferay_tomcat_dir }}
+{% if liferay_enable_remote_debug %}
+env CATALINA_OPTS="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n"
+{% endif %}
+
+script
+ exec {{ liferay_tomcat_dir }}/bin/catalina.sh run
+end script
+
+post-stop script
+ rm -rf {{ liferay_tomcat_dir }}/temp/*
+end script

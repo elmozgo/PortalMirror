@@ -1,0 +1,43 @@
+# ---
+
+# # Configure MySQL installation for Liferay
+# mysql_db:
+#   - name: portalmirror-liferay
+#     replicate: no
+
+# mysql_users:
+#      - name: portalmirror
+#        pass: portalmirror
+#        priv: "*.*:ALL"
+
+
+# # Liferay version
+# liferay_version: 6.2-ce-ga6
+
+# # Liferay custom ext props
+# portalmirror_liferay_ext_props: |
+#           SAMPLE_PROPS=whatever
+
+# #nodejs version
+# nodejs_version : "8.x"
+
+
+# #self signed certificate
+# openssl_selfsigned_cert_root: /etc/apache2/ssl
+# openssl_selfsigned_hostname: portalmirror
+
+# #apache
+# ssl_cert_directory: /etc/apache2/ssl/portalmirror/fullchain.pem
+# ssl_cert_local_directory: /etc/apache2/ssl/portalmirror/
+# ssl_cert_directory: /etc/pki/tls/certs
+
+# certificate_file: "{{ ssl_cert_directory }}/notsecure.crt"
+# certificate_key_file: "{{ ssl_cert_directory }}/notsecure.key"
+
+
+# apache_vhosts_file: portalmirror.conf
+
+
+# apache_modules_disabled :
+#   - 
+

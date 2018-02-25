@@ -1,0 +1,22 @@
+[Unit]
+Description=Liferay Tomcat servlet container
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory={{ liferay_tomcat_dir }}
+User={{ liferay_service_user }}
+Group={{ liferay_service_group }}
+
+Environment= CATALINA_HOME={{ liferay_tomcat_dir }}
+Environment= CATALINA_BASE={{ liferay_tomcat_dir }}
+
+{% if liferay_enable_remote_debug %}
+Environment= CATALINA_OPTS="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n"
+{% endif %}
+
+
+ExecStart={{ liferay_tomcat_dir }}/bin/catalina.sh run
+ExecStop={{ liferay_tomcat_dir }}/bin/shutdown.sh
+
+ExecStopPost= rm -rf {{ liferay_tomcat_dir }}/temp/*

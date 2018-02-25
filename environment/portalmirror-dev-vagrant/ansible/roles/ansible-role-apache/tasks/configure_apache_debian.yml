@@ -1,0 +1,99 @@
+---
+
+- name : generate main config file
+  become : True
+  template :
+    src   : "{{ item }}"
+    dest  : /etc/apache2/apache2.conf
+    group : root
+    owner : root
+    mode  : 0644
+  with_first_found :
+    - "{{ inventory_dir }}/templates/apache/{{ apache_main_file }}"
+    - "{{ role_path }}/templates/apache2.conf.j2"
+  notify :
+    - restart apache
+
+
+- name : generate envvars config file
+  become : True
+  template :
+    src   : "{{ item }}"
+    dest  : /etc/apache2/envvars
+    group : root
+    owner : root
+    mode  : 0644
+  with_first_found :
+    - "{{ inventory_dir }}/templates/apache/{{ apache_envvars_file }}_{{ apache_version }}"
+    - "{{ role_path }}/templates/envvars.j2"
+  notify :
+    - restart apache
+
+
+- name : create configuration management if not exists - available
+  become : True
+  file :
+    path  : "{{ item }}"
+    state : directory
+    owner : root
+    group : root
+    mode  : 0750
+  with_items :
+    - "/etc/apache2/conf-available"
+    - "/etc/apache2/conf-enabled"
+
+
+- name : generate security.conf config file
+  become : True
+  template :
+    src   : "{{ item }}"
+    dest  : /etc/apache2/conf-available/security.conf
+    group : root
+    owner : root
+    mode  : 0644
+  with_first_found :
+    - "{{ inventory_dir }}/templates/apache/{{ apache_security_file }}_{{ apache_version }}"
+    - "{{ role_path }}/templates/security.conf.j2"
+  notify :
+    - restart apache
+
+
+- name : check security configuration activated
+  become : True
+  file :
+    src   : /etc/apache2/conf-available/security.conf
+    dest  : /etc/apache2/conf-enabled/security.conf
+    state : link
+
+
+- name : disable some modules
+  become : True
+  apache2_module :
+    name  : "{{ item }}"
+    state : absent
+  with_items : "{{ apache_modules_disabled }}"
+  notify :
+    - restart apache
+
+
+- name : enable some modules
+  become : True
+  apache2_module :
+    name  : "{{ item }}"
+    state : present
+  with_items : "{{ apache_modules_enabled }}"
+  notify :
+    - restart apache
+
+
+- name : generate virtualhost files
+  become : True
+  template :
+    src   : "{{ role_path }}/templates/vhost.conf.j2"
+    dest  : "/etc/apache2/sites-available/{{ item.server_file_name }}.conf"
+    group : root
+    owner : root
+    mode  : 0644
+  notify     : restart apache
+  with_items : "{{ apache_vhosts }}"
+

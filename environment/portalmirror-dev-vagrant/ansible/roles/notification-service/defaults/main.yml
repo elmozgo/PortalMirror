@@ -1,0 +1,8 @@
+---
+# defaults file for notification-service
+
+notification_service_user : notification
+notification_service_group : notification
+notification_service_app_path : /vagrant/notification-serv-deploy
+notification_service_main_js : index.js
+notification_service_autostart : true

@@ -1,0 +1,19 @@
+---
+
+# Main tasks file for openjdk-jdk role
+
+- name: 'INIT | Manage variables to use for our target'
+  include: "{{ role_path }}/tasks/manage_variables.yml"
+  tags:
+    - 'role::openjdk-jdk'
+    - 'role::openjdk-jdk::init'
+    - 'role::openjdk-jdk::install'
+
+
+- name: 'INSTALL | Manage OS installation tasks'
+  become: True
+  include: "{{ role_path }}/tasks/install_{{ ansible_os_family | lower }}.yml"
+  tags:
+    - 'role::openjdk-jdk'
+    - 'role::openjdk-jdk::init'
+    - 'role::openjdk-jdk::install'

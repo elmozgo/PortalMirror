@@ -1,0 +1,60 @@
+# {{ ansible_managed }}
+
+{% for host in item.virtual_hosts %}
+<VirtualHost *:{{ host.port | default('80') }}>
+
+    ServerName {{ item.server_name }}
+{% if host.server_alias is defined %}
+    ServerAlias {{ host.server_alias | join(' ') }}
+{% endif %}
+
+{% if item.server_admin is defined %}
+    ServerAdmin {{ item.server_admin }}
+{% endif %}
+
+{% if host.has_ssl %}
+    SSLEngine On
+    SSLCertificateFile {{ apache_ssldir }}/{{host.cert_file | basename }}
+    SSLCertificateKeyFile {{ apache_ssldir }}/{{host.key_file  | basename }}
+    {% if host.chain_file is defined %}
+    SSLCertificateChainFile {{ apache_ssldir }}/{{ host.chain_file | basename }}
+    {% endif %}
+{% endif %}
+
+    DocumentRoot {{ item.document_root }}
+{% if host.virtualhost_extra is defined %}
+{% for line in host.virtualhost_extra.rstrip().split('\n') %}
+    {{ line }}
+{% endfor %}
+{% endif %}
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    <Directory "{{ item.document_root }}">
+{% if item.directory_options is defined %}
+        Options {{ item.directory_options | join(' ') }}
+{% else %}
+        Options -Indexes +FollowSymLinks
+{% endif %}
+
+{% if item.directory_extra is defined %}{% for extra in item.directory_extra %}
+        {{ extra }}
+{% endfor %}{% endif %}
+{% if host.directory_extra is defined %}{% for extra in host.directory_extra %}
+        {{ extra }}
+{% endfor %}{% endif %}
+
+    </Directory>
+
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel {{ host.log_level | default('warn') }}
+
+    ErrorLog ${APACHE_LOG_DIR}/{{item.server_file_name}}_error.log
+    CustomLog ${APACHE_LOG_DIR}/{{item.server_file_name}}_access.log combined
+
+</VirtualHost>
+{% endfor %}

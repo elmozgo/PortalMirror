@@ -1,0 +1,33 @@
+---
+# defaults file for ansible-liferay
+
+# The version to be installed
+liferay_version: 6.2-ce-ga2
+
+liferay_base_dir: /opt/liferay
+
+# The home directory of the Liferay Portal installation
+liferay_home_dir_name: "liferay-portal-{{ liferay_version }}"
+liferay_home_dir: "{{liferay_base_dir}}/{{ liferay_home_dir_name }}"
+
+liferay_tomcat_dir: "{{liferay_home_dir}}/tomcat-{{ liferay_bundle_tomcat_version }}"
+
+liferay_autodeploy_dir: "{{liferay_home_dir}}/deploy"
+
+liferay_service_name: liferay
+liferay_service_user: liferay
+liferay_service_group: liferay
+
+# Users that should get read access to the Liferay installation. Define in host_vars if necessary.
+#liferay_system_users_access:
+#  - user1
+#  - user2
+#  - ...
+
+# mysql_connector_version: 5.1.29
+# mysql_connector_download_base_url: "http://search.maven.org/remotecontent?filepath=mysql/mysql-connector-java/{{mysql_connector_version}}"
+# mysql_connector_archive: "mysql-connector-java-{{mysql_connector_version}}.jar"
+# mysql_connector_archive_shasum: aa73201130c765a33864d4d3aaab19dc07ef50ccc9df59249d21a41f03603d43
+
+# Enable/disable remote debugging for the Liferay Tomcat server.
+liferay_enable_remote_debug: false

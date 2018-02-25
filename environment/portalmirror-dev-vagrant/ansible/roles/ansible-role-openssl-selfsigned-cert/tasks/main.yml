@@ -1,0 +1,9 @@
+---
+# tasks file for ansible-role-openssl-cert
+
+
+- include: generate_debian.yml
+  tags:
+    - config
+    - apache
+  when: ansible_os_family == "Debian"

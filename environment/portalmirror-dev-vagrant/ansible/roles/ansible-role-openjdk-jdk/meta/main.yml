@@ -1,0 +1,21 @@
+---
+
+galaxy_info:
+  author: 'Alexandre Chaussier'
+  description: 'Ansible role to manage openjdk-jdk package'
+  company: 'Infopen (http://www.infopen.pro)'
+  license: 'MIT'
+  min_ansible_version: '2.2'
+  github_branch: 'master'
+  platforms:
+    - name: 'Debian'
+      versions:
+        - 'jessie'
+    - name: 'Ubuntu'
+      versions:
+        - 'trusty'
+        - 'xenial'
+  galaxy_tags:
+    - 'development'
+    - 'system'
+dependencies: []

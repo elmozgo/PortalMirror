@@ -1,0 +1,178 @@
+---
+- name: Assert platform is supported
+  tags: liferay
+  assert:
+    that:
+      - ansible_os_family in liferay_supported_platforms
+
+- name: Update apt package cache
+  tags: liferay
+  when: ansible_os_family == 'Debian'
+  apt:
+    update_cache=yes
+    cache_valid_time=3600
+
+- name: Load OS dependant vars
+  tags: liferay
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Install required packages
+  tags: liferay
+  with_items: "{{ liferay_package_list }}"
+  action: "{{ ansible_pkg_mgr }} state=installed name={{ item }}"
+
+
+- name: Load version vars
+  tags: liferay
+  with_first_found:
+    - ../vars/versions/{{ liferay_version }}.yml
+    - ../vars/versions/default.yml
+  include_vars: "{{ item }}"
+
+- name: Assert version vars
+  tags: liferay
+  assert:
+    that:
+      - liferay_download_base_url not in (None, "")
+      - liferay_bundle_archive not in (None, "")
+      - liferay_bundle_archive_shasum not in (None, "")
+      - liferay_bundle_tomcat_version not in (None, "")
+
+
+- include: local.yml
+  tags: liferay
+
+
+- name: Install remote ansible data path directory
+  tags: liferay
+  sudo: yes
+  file:
+    state=directory
+    dest={{ remote_ansible_data_path }}
+
+- name: Copy Tomcat bundle
+  tags: liferay
+  sudo: yes
+  copy:
+    src={{ local_ansible_data_path }}/{{ liferay_bundle_archive }}
+    dest={{ remote_ansible_data_path }}/{{ liferay_bundle_archive }}
+    owner=0
+    group=0
+    mode=0644
+
+# - name: Copy MySQL connector
+#   tags: liferay
+#   sudo: yes
+#   copy:
+#     src={{ local_ansible_data_path }}/{{ mysql_connector_archive }}
+#     dest={{ remote_ansible_data_path }}/{{ mysql_connector_archive }}
+#     owner=0
+#     group=0
+#     mode=0644
+
+
+- name: create system group
+  tags: liferay
+  group:
+    state=present
+    system=yes
+    name={{liferay_service_group}}
+
+- name: create system user
+  tags: liferay
+  user:
+    state=present
+    system=yes
+    name={{liferay_service_user}}
+    group={{liferay_service_group}}
+    shell=/bin/bash
+
+- name: enable read access for maintainance users
+  tags: liferay
+  command: usermod -a -G {{liferay_service_group}} {{item}}
+  with_items: "{{ liferay_system_users_access }}"
+  ignore_errors: yes
+  when: liferay_system_users_access is defined
+  # We don't use the 'user' module here, because absent users should not be created.
+
+- name: create installation base dir
+  tags: liferay
+  file:
+    state=directory
+    path={{liferay_base_dir}}
+    owner={{liferay_service_user}}
+    group={{liferay_service_group}}
+
+- name: install bundle
+  tags: liferay
+  unarchive:
+    src={{ remote_ansible_data_path }}/{{ liferay_bundle_archive }}
+    dest={{liferay_base_dir}}
+    copy=no
+    creates={{liferay_home_dir}}
+  notify: service liferay restart
+
+- name: Apply Liferay home
+  tags: liferay
+  when:
+    - liferay_bundle_base_dir_name is defined
+    - liferay_bundle_base_dir_name not in (None, "")
+    - liferay_bundle_base_dir_name != liferay_home_dir_name
+  command: mv -f {{ liferay_base_dir }}/{{ liferay_bundle_base_dir_name }} {{ liferay_home_dir }}
+    creates={{liferay_home_dir}}
+
+- name: change installation owner
+  tags: liferay
+  file:
+    path={{liferay_home_dir}}
+    recurse=yes
+    owner={{liferay_service_user}}
+    group={{liferay_service_group}}
+  # TODO Could be removed if the 'unarchive' module would offer parameters 'owner' and 'group'.
+  # The 'unarchive' task above would be defined with 'sudo: true' and 'sudo_user: "{{liferay_service_user}}"' then.
+  # We cannot do this now, because the '/opt' directory is not writable for the '{{liferay_service_user}}' user.
+
+# - name: copy mysql connector
+#   tags: liferay
+#   copy:
+#     src={{ remote_ansible_data_path }}/{{ mysql_connector_archive }}
+#     dest={{liferay_tomcat_dir}}/lib/ext
+#     owner={{liferay_service_user}}
+#     group={{liferay_service_group}}
+#   notify: service liferay restart
+
+- name: copy portal properties
+  tags: liferay
+  template:
+    src=portal-ext.properties.j2
+    dest={{liferay_home_dir}}/portal-ext.properties
+    owner={{liferay_service_user}}
+    group={{liferay_service_group}}
+    mode=644
+  notify: service liferay restart
+
+- name: set service script mode
+  tags: liferay
+  file:
+    state=file
+    path={{liferay_tomcat_dir}}/bin/catalina.sh
+    owner={{liferay_service_user}}
+    group={{liferay_service_group}}
+    mode=755
+
+- name: copy service unit
+  tags: liferay
+  template:
+    src=liferay.service.j2
+    dest=/etc/systemd/system/{{liferay_service_name}}.service
+    owner=root
+    group=root
+    mode=0640
+  notify: service liferay restart
+
+- name: define service
+  tags: liferay
+  service:
+    enabled=yes
+    name={{liferay_service_name}}
+  notify: service liferay restart

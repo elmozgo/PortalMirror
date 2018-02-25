@@ -1,0 +1,1 @@
+portalmirror-server ansible_ssh_host=portalmirror-server.yourdomain.com

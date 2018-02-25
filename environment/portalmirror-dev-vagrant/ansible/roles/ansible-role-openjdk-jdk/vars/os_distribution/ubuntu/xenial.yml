@@ -1,0 +1,5 @@
+---
+
+# Default Debian Jessie variables
+
+_openjdk_jdk_version: 8

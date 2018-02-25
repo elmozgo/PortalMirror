@@ -1,0 +1,58 @@
+
+- name : install python and pip packages
+  become : True
+  apt  :
+    name  : "{{ item }}"
+    state : present
+    update_cache     : True
+    cache_valid_time : 3600
+  with_items : 
+    - python3
+    - python3-pip
+
+- name : install PyOpenSSL
+  pip:
+    name: pyopenssl
+    executable: pip3
+
+- name: Ensure directory exists for local self-signed TLS certs.
+  file:
+    path: "{{ selfsigned_ssl_location }}"
+    state: directory
+
+- name: Generate an OpenSSL private key.
+  openssl_privatekey:
+    path: "{{ selfsigned_ssl_location }}/{{ item.1.key_file }}"
+  with_subelements :
+    - "{{ apache_vhosts }}"
+    - virtual_hosts
+  when : apache_vhosts != false and item.1.has_ssl == true and item.1.ssl_selfsigned == true
+
+- name: Generate an OpenSSL CSR.
+  openssl_csr:
+    path: "{{ selfsigned_ssl_location }}/{{ item.1.ssl_selfsigned_hostname }}.csr"
+    privatekey_path: "{{ selfsigned_ssl_location }}/{{ item.1.key_file }}"
+    common_name: "{{ item.1.ssl_selfsigned_hostname }}"
+  with_subelements :
+    - "{{ apache_vhosts }}"
+    - virtual_hosts
+  when : apache_vhosts != false and item.1.has_ssl == true and item.1.ssl_selfsigned == true  
+
+- name: Generate a Self Signed OpenSSL certificate.
+  openssl_certificate:
+    path: "{{ selfsigned_ssl_location }}/{{ item.1.cert_file }}"
+    privatekey_path: "{{ selfsigned_ssl_location }}/{{ item.1.key_file }}"
+    csr_path: "{{ selfsigned_ssl_location }}/{{ item.1.ssl_selfsigned_hostname }}.csr"
+    provider: selfsigned
+  with_subelements :
+    - "{{ apache_vhosts }}"
+    - virtual_hosts
+  when : apache_vhosts != false and item.1.has_ssl == true and item.1.ssl_selfsigned == true  
+
+- name: Grant access to all self signed open ssl files
+  become : True
+  file:
+    state: directory
+    path: "{{ selfsigned_ssl_location }}"
+    mode: u=xrw,g=xr,o=xr
+    recurse: yes

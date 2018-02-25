@@ -1,0 +1,20 @@
+setup.wizard.enabled=false
+
+liferay.home={{liferay_home_dir}}
+
+jdbc.default.driverClassName={{liferay_db_driver}}
+jdbc.default.url={{liferay_db_connection_string}}
+jdbc.default.username={{liferay_db_username}}
+jdbc.default.password={{liferay_db_password}}
+
+auto.deploy.deploy.dir={{liferay_autodeploy_dir}}
+
+
+#custom props below:
+
+{% if portalmirror_liferay_ext_props is defined %}
+{% for line in portalmirror_liferay_ext_props.rstrip().split('\n') %}
+    {{ line }}
+{% endfor %}
+{% endif %}
+

@@ -1,0 +1,141 @@
+---
+
+# Basic settings
+postgresql_version: 9.3
+postgresql_encoding: 'UTF-8'
+postgresql_locale: 'en_US.UTF-8'
+postgresql_ctype: 'en_US.UTF-8'
+
+postgresql_admin_user: "postgres"
+postgresql_default_auth_method: "trust"
+
+postgresql_service_enabled: true # should the service be enabled, default is true
+
+postgresql_cluster_name: "main"
+postgresql_cluster_reset: false
+
+# List of databases to be created (optional)
+# Note: for more flexibility with extensions use the postgresql_database_extensions setting.
+postgresql_databases:
+  - name: portalmirror-liferay
+    # owner: baz          # optional; specify the owner of the database
+    # hstore: yes         # flag to install the hstore extension on this database (yes/no)
+    # uuid_ossp: yes      # flag to install the uuid-ossp extension on this database (yes/no)
+    # citext: yes         # flag to install the citext extension on this database (yes/no)
+    encoding: 'UTF-8'   # override global {{ postgresql_encoding }} variable per database
+    lc_collate: 'en_US.UTF-8'   # override global {{ postgresql_locale }} variable per database
+    lc_ctype: 'en_US.UTF-8'     # override global {{ postgresql_ctype }} variable per database
+
+
+# List of users to be created (optional)
+postgresql_users:
+  - name: portalmirror
+    pass: portalmirror
+    encrypted: no       # denotes if the password is already encrypted.
+
+# List of user privileges to be applied (optional)
+postgresql_user_privileges:
+  - name: portalmirror                   # user name
+    db: portalmirror-liferay                  # database
+    priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
+    role_attr_flags: "CREATEDB" # role attribute flags
+
+
+liferay_db_username: portalmirror
+liferay_db_password: portalmirror
+liferay_db_driver: org.postgresql.Driver
+liferay_db_connection_string: jdbc:postgresql://localhost:5432/portalmirror-liferay
+
+
+# Configure Liferay installation
+liferay_autodeploy_dir: /vagrant/liferay-deploy
+
+liferay_enable_remote_debug: true
+
+# Liferay version
+liferay_version: 6.2-ce-ga6
+
+# Liferay custom ext props
+portalmirror_liferay_ext_props: |
+  nodews.url=ws://localhost:9000/ws
+
+#nodejs version
+nodejs_version : "8.x"
+
+#self signed certificate
+selfsigned_ssl_location: /etc/apache2/ssl
+
+apache_packages :
+  - apache2
+  - libapache2-mod-jk
+
+apache_modules_disabled : []
+
+apache_modules_enabled  :
+  - rewrite
+  - ssl
+  - jk
+  - proxy
+  - proxy_ajp
+  - proxy_wstunnel
+
+# Site management
+apache_sites_disabled :
+  - 000-default
+  - default-ssl
+apache_sites_enabled  :
+  - portalmirror
+
+apache_vhosts :
+  - server_name      : portalmirror
+    server_admin     : admin@portalmirror.vagrant
+    server_file_name : portalmirror
+    document_root    : /var/www/portalmirror
+    directory_extra  : []
+      # - AllowOverride All
+      # - Require all granted
+    directory_options :
+      - Indexes
+      - FollowSymLinks
+      # - MultiViews
+    virtual_hosts :
+      - has_ssl      : false
+        port         : 80
+        log_level    : warn
+        server_alias :
+          - portalmirror.vagrant
+        virtualhost_extra : |
+          
+          JkMount /* ajp13_worker
+          JkUnmount /ws/* ajp13_worker
+
+          ProxyPass "/ws/internal" "!"
+          ProxyPass "/ws"  "ws://localhost:3000/"
+
+
+
+          # RewriteEngine On
+          # RewriteCond %{REQUEST_URI}  ^/ws/                  [NC] 
+          # RewriteCond %{QUERY_STRING} transport=websocket    [NC]
+          # RewriteRule /ws/(.*)        ws://localhost:3000/$1 [P,L]
+
+          
+
+          # - "Redirect / https://www.my_site.com/"
+      - has_ssl      : true
+        ssl_selfsigned_hostname : portalmirror
+        ssl_selfsigned : true
+        port         : 443
+        log_level    : warn
+        key_file     : "portalmirror.key"
+        cert_file    : "portalmirror.pem"
+        directory_extra : []
+          # - "DirectoryIndex app_dev.php"
+        server_alias :
+          - portalmirror.vagrant
+
+notification_service_user : notification
+notification_service_group : notification
+notification_service_app_path : /vagrant/notification-serv-deploy
+notification_service_main_js : index.js
+notification_service_autostart : false

@@ -1,0 +1,8 @@
+---
+
+# Pathes for Ansible to store downloaded or templated data
+local_ansible_data_path: ../../files
+remote_ansible_data_path: /usr/local/src/ansible/data
+
+liferay_supported_platforms:
+  - Debian

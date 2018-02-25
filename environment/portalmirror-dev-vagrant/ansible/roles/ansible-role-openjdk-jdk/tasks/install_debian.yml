@@ -1,0 +1,11 @@
+---
+
+# Debian OS family install tasks
+
+- name: 'INSTALL | APT | Install openjdk-jdk'
+  apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+    update_cache: "{{ openjdk_jdk_apt_update_cache }}"
+    cache_valid_time: "{{ openjdk_jdk_apt_cache_valid_time }}"
+  with_items: "{{ openjdk_jdk_packages }}"

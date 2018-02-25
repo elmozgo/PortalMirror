@@ -1,0 +1,18 @@
+---
+
+# Common tests to Travis and Vagrant
+
+- name: Check service is started
+  become: True
+  register: apache_test_service_state
+  command: "service {{ apache_service_name }} status"
+  when: "ansible_os_family == 'Debian'"
+  changed_when: False
+  failed_when: "'apache2 is running'
+    not in (apache_test_service_state.stdout | lower)"
+
+- name:  Check apache service is running
+  uri:
+    url: "http://127.0.0.1"
+    status_code: "403,404"
+
