@@ -87,7 +87,7 @@ apache_modules_enabled  :
   - jk
   - proxy
   - proxy_ajp
-  - proxy_htt
+  - proxy_http
   - proxy_wstunnel
 
 # Site management
