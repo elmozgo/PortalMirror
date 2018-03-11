@@ -8,7 +8,8 @@
 
 
 window.wsTokenSettings = window.wsTokenSettings || {
-	nodeWsUrl: '<%=PropsUtil.get("nodews.url")%>',
+	nodeWsHost: '<%=PropsUtil.get("nodews.host")%>',
+	nodeWsPath: '<%=PropsUtil.get("nodews.path")%>',
 	tokenLocation: '<%=PropsUtil.get("tokenLocation")%>'
 }
 </script>

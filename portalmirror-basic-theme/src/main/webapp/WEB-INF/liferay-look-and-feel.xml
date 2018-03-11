@@ -5,5 +5,10 @@
 	<compatibility>
 		<version>6.2.5+</version>
 	</compatibility>
-	<theme id="portalmirror-basic" name="portalmirror-basic-theme" />
+	<theme id="portalmirror-basic" name="Portalmirror Basic Theme">
+		<color-scheme name="Default color scheme"
+			id="portalmirror-basic-default-color-scheme">
+			<css-class>lustro</css-class>
+		</color-scheme>
+	</theme>
 </look-and-feel>

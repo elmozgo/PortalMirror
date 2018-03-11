@@ -13,11 +13,14 @@ SocketConnection.prototype = {
 	authToken : null,
 
 	configure : function() {
-		this.socket = io(wsTokenSettings.nodeWsUrl + '/' + this.namespace, {
+		this.socket = io(wsTokenSettings.nodeWsHost + '/' + this.namespace, {
+		    'path' : wsTokenSettings.nodeWsPath, 
 			'connect timeout' : this.connectTimeout,
 			'reconnect' : this.reconnect,
 			'reconnection delay' : this.reconnectionDelay,
-			'query' : "pageId=" + this.pageId
+			'query' : "pageId=" + this.pageId,
+			'transports' : ['websocket'],
+			'upgrade': false
 		});
 	},
 

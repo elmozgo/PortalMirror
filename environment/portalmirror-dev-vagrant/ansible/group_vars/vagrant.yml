@@ -57,7 +57,17 @@ liferay_version: 6.2-ce-ga6
 
 # Liferay custom ext props
 portalmirror_liferay_ext_props: |
-  nodews.url=ws://localhost:9000/ws
+  nodews.host=ws://localhost:9000
+  nodews.path=/ws/socket.io
+  nodews.api.url=http://localhost:3000
+  web.server.http.port=9000
+  web.server.host=localhost
+  geonames.api.username=portalmirror
+  websocket.node.secret=iM44jqyyDI7gyGPNCJdGyoFTcureF7p4gaEWAODa91PLQHXBWB0tsQwDvg8dJQL
+  auth.token.check.enabled=true
+  portlet.add.default.resource.check.enabled=true
+  tokenLocation=/delegate/jwt/ajax/ws-token
+
 
 #nodejs version
 nodejs_version : "8.x"
@@ -77,6 +87,7 @@ apache_modules_enabled  :
   - jk
   - proxy
   - proxy_ajp
+  - proxy_htt
   - proxy_wstunnel
 
 # Site management
@@ -109,8 +120,9 @@ apache_vhosts :
           JkMount /* ajp13_worker
           JkUnmount /ws/* ajp13_worker
 
-          ProxyPass "/ws/internal" "!"
-          ProxyPass "/ws"  "ws://localhost:3000/"
+          ProxyPass "/ws/internal/" "!"
+          ProxyPass "/ws/"  "ws://localhost:3000/"
+          ProxyPassReverse "/ws/" "ws://localhost:3000/"
 
 
 

@@ -52,10 +52,11 @@ public class PortletController implements PortletConfigAware {
         
         ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute (WebKeys.THEME_DISPLAY);
         String instanceId = themeDisplay.getPortletDisplay().getInstanceId();
+        //String portletId = portletId + instanceId != null? ("_INSTANCE_" + instanceId) : "";
         Layout layout = themeDisplay.getLayout(); 
         Long plid = layout.getPlid() ;
         
-        model.addAttribute("portletId", portletId + "_INSTANCE_" + instanceId);
+        model.addAttribute("portletId", portletId);
         model.addAttribute("plid", Long.toString(plid));
         model.addAttribute("refresherActionAuthorized", AuthorizationLogic.isRefreshActionAuthorized());
         

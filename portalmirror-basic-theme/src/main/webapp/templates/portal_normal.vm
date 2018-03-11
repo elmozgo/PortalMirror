@@ -19,7 +19,7 @@
 $theme.include($body_top_include)
 
 
-$theme.runtime("portalmirror-refresher-portlet_WAR_portalmirror-refresher-portlet")
+$theme.runtime("portalmirror-refresher-portlet_WAR_portalmirror-refresher-portlet_INSTANCE_0000")
 
 #if ($permissionChecker.isOmniadmin())
 	#dockbar()

@@ -62,7 +62,7 @@ RefresherIcon.prototype = {
                     A.io.request(that.refreshActionUrl, {
                         method: 'post',
                         dataType: 'json',
-                        data:{},
+                        data:{'p_auth': Liferay.authToken},
                         on: {
                             success: function(){
                                 console.log('refresh request sent');
