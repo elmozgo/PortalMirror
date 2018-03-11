@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-![](http://images.mentalfloss.com/sites/default/files/styles/insert_main_wide_image/public/construction%205.gif)
+![](construction.gif)
 
 Inspired by [MagicMirror2](https://magicmirror.builders)
 
