@@ -18,7 +18,7 @@ Inspired by [MagicMirror2](https://magicmirror.builders){:target="_blank"}
 # [](#input-dev)Input devices
 A mirror should support an optional input device that:
 *   **is not a touch screen digitizer** - Fingerprints don't look good on reflective surfaces!
-*   **is not a camera** - 1. People cover their laptop cameras for comfort of privacy. 2. A bedroom is a common place to install mirrors. It could be too creepy for many users to use gestures with image recognition. 
+*   **is not a camera** - 1. People cover their laptop cameras for comfort of privacy. 2. A bedroom is a common place to install mirrors. It could be too creepy for many users to use cameras for gestures recognition. 
 *   **is supported on Linux** - Unfortunately, Kinect requires a Windows client. 
 *   **is cheap and easy to fit in the mirror's frame**
 
@@ -76,6 +76,6 @@ Here is the list of other commercial products and concepts. Build your own, it's
 *   [**MirroCool**](https://mirrocool.com){:target="_blank"}
 *   [**Pesa Bydgoszcz DART**](http://www.vagonweb.cz/fotogalerie/PL/PKP_ED161.php?lang=en){:target="_blank"}
 *   [**AbyssGlass**](http://abyssglass.com){:target="_blank"}
-*   [**apple mirror***](http://www.rafaeldymek.com/portfolio/apple-mirror){:target="_blank"}
+*   [**apple mirror**](http://www.rafaeldymek.com/portfolio/apple-mirror){:target="_blank"}
 *   [**Perseus**](https://www.kickstarter.com/projects/1377326093/perseus-the-worlds-smartest-mirror){:target="_blank"}
 *   [**PANL**](https://getpanl.com){:target="_blank"}
