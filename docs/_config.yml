@@ -4,7 +4,7 @@ email: artur.karwowski@mailplus.pl
 description: >- # this means to ignore newlines until "baseurl:"
   Server side variation of MagicMirror2 &sdot; Digital Signage CMS &sdot;
   Browser thin client &sdot; Legacy and hipster technolgies merged together  
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/PortalMirror" # the subpath of your site, e.g. /blog
 url: "https://elmozgo.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: elmozgo
 github_username:  elmozgo
