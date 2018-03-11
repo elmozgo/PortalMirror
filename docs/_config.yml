@@ -25,7 +25,7 @@ github_username:  elmozgo
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-architect
+theme: jekyll-theme-midnight
 
 
 # Exclude from processing.
