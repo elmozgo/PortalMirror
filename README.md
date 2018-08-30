@@ -9,5 +9,7 @@ See: [PortalMirror GitHub pages](https://elmozgo.github.io/PortalMirror/)
 *   `cd environment/portalmirror-dev-vagrant`
 *   `vagrant up`
 *   `cp -R ../../portalmirror-notification-service/. notification-serv-deploy/`
-*   `vagrant ssh -c 'cd /vagrant/notification-serv-deploy/ && pm2 start index.js --name "notification-serv"'`
-* http://localhost:9000
+*   `vagrant ssh`
+*   `cd /vagrant/notification-serv-deploy/ && npm install && pm2 start index.js --name "notification-serv"`
+*   `exit`
+*   http://localhost:9000
