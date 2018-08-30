@@ -24,9 +24,9 @@ A mirror should support an optional input device that:
 
 I've been looking for a device that match those requirements and I was inspired by the classic Apple iPod - it's big wheel and the central button. I figured out that the **mousewheel** that is in every computer mouse gives the same functionality and a similar feeling.
 
-The mousewheel can send 3 events, scroll up', 'scroll down' and 'wheel pressed', and they can all be handled by the code running in the browser.
+The mousewheel can send 3 events, scroll up', 'scroll down' and 'wheel pressed', and all of them can be handled by the code running in the browser.
 
-Here is the Twitter feed reader plugin that make use of the mousewheel. You can scroll though tweets of selected accounts and press to see the replies or play the video that is attached to the tweet.
+Here is the Twitter feed reader plugin that makes use of the mousewheel. You can scroll though tweets of selected accounts and press to see the replies or play the video that is attached to the tweet.
 
 {::options parse_block_html="true" /}
 <video  controls loop>
